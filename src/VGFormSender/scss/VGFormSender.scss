@@ -1,0 +1,13 @@
+.vg-form-sender {
+	&--alert {
+		&-block {
+			display: none;
+
+			.alert {
+				&:not(.show) {
+					display: none;
+				}
+			}
+		}
+	}
+}
