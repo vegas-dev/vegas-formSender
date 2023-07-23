@@ -147,9 +147,9 @@ function getHeight(el) {
  * @param el
  */
 function toggleSlide(el) {
-	if(el.getAttribute('data-max-height')) {
+	if (el.getAttribute('data-max-height')) {
 		// we've already used this before, so everything is set up
-		if(el.style.maxHeight.replace('px', '').replace('%', '') === '0') {
+		if (el.style.maxHeight.replace('px', '').replace('%', '') === '0') {
 			el.style.maxHeight = el.getAttribute('data-max-height');
 		} else {
 			el.style.maxHeight = '0';

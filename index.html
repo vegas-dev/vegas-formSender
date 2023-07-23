@@ -95,11 +95,7 @@
 	const $forms = document.querySelectorAll('[data-vgformsender]');
 	if ($forms.length) {
 		$forms.forEach(function (form) {
-			new VGFormSender(form, {
-				alertParams: {
-					type: 'block'
-				}
-			}).submit();
+			new VGFormSender(form).submit();
 		});
 	}
 </script>
