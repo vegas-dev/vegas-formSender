@@ -1,4 +1,17 @@
-import {ajax, collectData, mergeDeepObject} from "../../util/functions";
+import {ajax, collectData, eventHandler, setParams} from "../../util/functions";
+
+const defaultParams = {
+	'action': location.href,
+	'method': 'post',
+	'fields': [],
+	'jsonParse': true,
+	'redirect': null,
+	'validate': false,
+	'alert': true,
+	'alertParams': {
+		type: 'modal'
+	}
+}
 
 class VGSender {
 	constructor(form, arg = {}) {
@@ -9,26 +22,15 @@ class VGSender {
 			console.error('Первый параметр не должен быть пустым');
 			return false;
 		} else {
-			let params = {
-				'action': form.getAttribute('action') || location.href,
-				'method': form.getAttribute('method') || 'post',
-				'fields': null,
-				'jsonParse': form.getAttribute('data-json-parse') !== 'false',
-				'redirect': form.getAttribute('data-redirect') || null,
-				'validate': form.getAttribute('data-validate') || false, // from bootstrap < 5.3.0
-				'alert': form.getAttribute('data-alert') !== 'false',
-				'alertParams': {
-					type: form.getAttribute('data-alert-type') || 'modal' // there is also a "block" view
-				}
-			}
-
 			this.isInit = false;
 
 			this.form = form;
-			this.settings = mergeDeepObject(params, arg);
+			this.settings = setParams(form, defaultParams, arg);
 			this.classes = {
 				general: 'vg-form-sender'
 			}
+
+			console.log(this.settings)
 
 			if (this.settings.fields && typeof this.settings.fields == 'function') {
 				this.settings.fields = this.settings.fields();
@@ -109,6 +111,8 @@ class VGSender {
 				if (callback && 'success' in callback) {
 					if (typeof callback.success === 'function') callback.success(event, _this.form, data);
 				}
+
+				eventHandler.on(_this.form, 'success');
 
 				redirect();
 			});

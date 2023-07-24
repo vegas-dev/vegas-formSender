@@ -101,4 +101,33 @@ ajax.post = function (url, data, callback, async) {
 	ajax.send(url, callback, 'POST', data, async)
 };
 
-export {mergeDeepObject, collectData, ajax}
+const eventHandler = {
+	on: function (element, event) {
+		const eventSuccess = new CustomEvent(event, {
+			bubbles: true,
+		});
+
+		element.dispatchEvent(eventSuccess);
+	}
+}
+
+function setParams (element, params, arg) {
+	let objData = {},
+	mParams = mergeDeepObject(params, arg);
+
+	let data = [].filter.call(element.attributes, function(at) { return /^data-/.test(at.name); });
+
+	for (let val of data) {
+		if (val.name === 'data-alert-type' && val.value) mParams.alertParams.type = val.value
+		if (val.name === 'data-alert') mParams.alert = val.value === 'true';
+		if (val.name === 'data-validate') mParams.validate = val.value === 'true';
+		if (val.name === 'data-json-parse') mParams.jsonParse = val.value === 'true';
+		if (val.name === 'data-json-parse') mParams.jsonParse = val.value === 'true';
+		if (val.name === 'data-redirect' && val.value) mParams.redirect = val.value;
+	}
+
+	return mParams;
+}
+
+
+export {mergeDeepObject, collectData, ajax, eventHandler, setParams}

@@ -89,7 +89,7 @@
 			</div>
 
 			<div class="mt-5">
-				<form action="/php/server.php" method="GET" id="form-feedback" data-alert-type="block" data-vgformsender>
+				<form action="/php/server.php" method="GET" data-validate="true" id="form-feedback" data-alert-type="modal" data-vgformsender>
 					<input type="hidden" name="form" value="feedback">
 
 					<div class="row">
@@ -127,7 +127,11 @@
 	const $forms = document.querySelectorAll('[data-vgformsender]');
 	if ($forms.length) {
 		$forms.forEach(function (form) {
-			new VGFormSender(form).submit();
+			new VGFormSender(form, {
+				alertParams: {
+					type: 'block'
+				}
+			}).submit();
 		});
 	}
 </script>
