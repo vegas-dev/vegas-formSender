@@ -29,6 +29,8 @@
 
 			<div class="mt-5">
 				<form action="/php/server.php" method="POST" class="form" id="form-simple" data-vgformsender>
+					<input type="hidden" name="form" value="simple">
+
 					<div class="row">
 						<div class="col-lg-4 mb-3">
 							<label for="name" class="form-label">Ваше имя</label>
@@ -85,6 +87,36 @@
 					</div>
 				</form>
 			</div>
+
+			<div class="mt-5">
+				<form action="/php/server.php" method="GET" id="form-feedback" data-alert-type="block" data-vgformsender>
+					<input type="hidden" name="form" value="feedback">
+
+					<div class="row">
+						<div class="col-lg-4 mb-3">
+							<label for="user-name" class="form-label">Ваше имя</label>
+							<input type="text" name="user-name" id="user-name" class="form-control">
+						</div>
+						<div class="col-lg-4 mb-3">
+							<label for="user-email" class="form-label">Ваше email</label>
+							<input type="email" name="user-email" id="user-email" class="form-control">
+						</div>
+						<div class="col-lg-4 mb-3">
+							<label for="user-phone" class="form-label">Ваш телефон</label>
+							<input type="text" name="user-phone" id="user-phone" class="form-control">
+						</div>
+
+						<div class="col-12 mb-3">
+							<label for="user-message" class="form-label">Ваше письмо</label>
+							<textarea name="user-message" id="user-message" class="form-control"></textarea>
+						</div>
+
+						<div class="col-12">
+							<button type="submit" class="btn btn-primary" data-text-send="Отправляем..." data-text="Отправить">Отправить</button>
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
 	</header>
 </div>
@@ -95,11 +127,7 @@
 	const $forms = document.querySelectorAll('[data-vgformsender]');
 	if ($forms.length) {
 		$forms.forEach(function (form) {
-			new VGFormSender(form, {
-				alertParams: {
-					type: 'block'
-				}
-			}).submit();
+			new VGFormSender(form, {}).submit();
 		});
 	}
 </script>

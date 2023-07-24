@@ -1,6 +1,7 @@
 @import "variables";
+@import "svg";
 
-.vg-form-sender {
+:root {
 	--vg-fs-color-danger: #{$color-danger};
 	--vg-fs-color-danger-border: #{$color-danger-border};
 	--vg-fs-color-danger-bg: #{$color-danger-bg};
@@ -10,9 +11,9 @@
 	--vg-fs-color-success-bg: #{$color-success-bg};
 
 	--vg-fs-border-radius: #{$border-radius};
+}
 
-	@import "svg";
-
+.vg-form-sender {
 	&--alert {
 		&-block {
 			display: none;
@@ -144,7 +145,7 @@
 					}
 
 					&-success {
-						color: var(--vg-fs-color-danger)
+						color: var(--vg-fs-color-success)
 					}
 				}
 			}

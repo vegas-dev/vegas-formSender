@@ -13,8 +13,8 @@ class VGFormSender extends VGSender {
 				modal: 'vg-form-sender--alert-modal',
 			}
 		}
-
 		this.classes = mergeDeepObject(this.classes, classes);
+
 		this.alertElement = null;
 
 		this.svg =  {
@@ -30,6 +30,8 @@ class VGFormSender extends VGSender {
 		if (this.settings.alertParams.type === 'modal') {
 			this.alertElement = this.drawAlertModal();
 		}
+
+		return this;
 	}
 
 	submit(callback) {
@@ -39,25 +41,25 @@ class VGFormSender extends VGSender {
 			const _this = this;
 
 			return super.submit({
-				beforeSend: function (form) {
+				beforeSend: function (event, form) {
+					if (callback && 'beforeSend' in callback && typeof callback.beforeSend === 'function') {
+						callback.beforeSend(event, form);
+					}
+
 					_this.btnSubmit(form, 'before');
 					_this.alert(form, {}, 'before');
-
-					if (callback && 'beforeSend' in callback && typeof callback.beforeSend === 'function') {
-						callback.beforeSend(form);
-					}
 				},
-				success: function (form, data) {
+				success: function (event, form, data) {
+					if (callback && 'success' in callback && typeof callback.success === 'function') {
+						callback.success(event, form, data);
+					}
+
 					if (_this.settings.jsonParse && typeof data === 'string') {
 						data = JSON.parse(data);
 					}
 
 					_this.btnSubmit(form, 'success');
 					_this.alert(form, data, 'success');
-
-					if (callback && 'success' in callback && typeof callback.success === 'function') {
-						callback.success(form, data);
-					}
 				}
 			});
 		}

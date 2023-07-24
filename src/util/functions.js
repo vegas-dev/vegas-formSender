@@ -91,18 +91,14 @@ ajax.send = function (url, callback, method, data, async) {
 
 ajax.get = function (url, data, callback, async) {
 	let query = [];
-	for (let key in data) {
-		query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+	for (let key of data) {
+		query.push(encodeURIComponent(key[0]) + '=' + encodeURIComponent(key[1]));
 	}
 	ajax.send(url + (query.length ? '?' + query.join('&') : ''), callback, 'GET', null, async)
 };
 
 ajax.post = function (url, data, callback, async) {
-	let query = [];
-	for (let key in data) {
-		query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
-	}
-	ajax.send(url, callback, 'POST', query.join('&'), async)
+	ajax.send(url, callback, 'POST', data, async)
 };
 
 /**

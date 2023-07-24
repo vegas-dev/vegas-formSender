@@ -11,7 +11,7 @@ class VGSender {
 		} else {
 			let params = {
 				'action': form.getAttribute('action') || location.href,
-				'method': form.getAttribute('method') || 'get',
+				'method': form.getAttribute('method') || 'post',
 				'fields': null,
 				'jsonParse': form.getAttribute('data-json-parse') !== 'false',
 				'redirect': form.getAttribute('data-redirect') || false,
@@ -27,8 +27,7 @@ class VGSender {
 			this.form = form;
 			this.settings = mergeDeepObject(params, arg);
 			this.classes = {
-				general: 'vg-form-sender',
-				selector: 'vg-form-sender__selector'
+				general: 'vg-form-sender'
 			}
 
 			if (this.settings.fields && typeof this.settings.fields == 'function') {
@@ -45,14 +44,6 @@ class VGSender {
 		// Add general class
 		_this.form.classList.add(_this.classes.general);
 
-		// wrapping the form elements
-		let $inputs = _this.form.querySelectorAll('input, textarea');
-		if ($inputs.length) {
-			for (const $input of $inputs) {
-				$input.parentElement.classList.add(_this.classes.selector)
-			}
-		}
-
 		if (_this.settings.validate) {
 			_this.form.setAttribute('novalidate', '');
 			_this.form.classList.add('needs-validation');
@@ -66,7 +57,7 @@ class VGSender {
 		const _this = this;
 
 		_this.form.onsubmit = function (event) {
-			let data = new FormData(this);
+			let data = new FormData(_this.form);
 
 			if (typeof _this.settings.fields === 'object') {
 				_this.data = collectData(data, _this.settings.fields);
@@ -83,11 +74,11 @@ class VGSender {
 				}
 			}
 
-			return _this.request(callback);
+			return _this.request(callback, event);
 		};
 	}
 
-	request(callback) {
+	request(callback, event) {
 		if (!this.isInit) return false;
 		const _this = this;
 
@@ -96,7 +87,7 @@ class VGSender {
 			data = _this.data;
 
 		if (callback && 'beforeSend' in callback) {
-			if (typeof callback.beforeSend === 'function') callback.beforeSend(_this.form);
+			if (typeof callback.beforeSend === 'function') callback.beforeSend(event, _this.form);
 		}
 
 		if (method === 'post') {
@@ -104,7 +95,7 @@ class VGSender {
 				_this.form.classList.remove('was-validated');
 
 				if (callback && 'success' in callback) {
-					if (typeof callback.success === 'function') callback.success(_this.form, data);
+					if (typeof callback.success === 'function') callback.success(event, _this.form, data);
 				}
 			});
 		}
@@ -114,7 +105,7 @@ class VGSender {
 				_this.form.classList.remove('was-validated');
 
 				if (callback && 'success' in callback) {
-					if (typeof callback.success === 'function') callback.success(_this.form, data);
+					if (typeof callback.success === 'function') callback.success(event, _this.form, data);
 				}
 			});
 		}
