@@ -5,7 +5,7 @@
 
 sleep(2);
 
-$error = false;
+$error = true;
 
 if ($error) {
 	$sapi_type = php_sapi_name();

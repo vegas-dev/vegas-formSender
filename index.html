@@ -112,7 +112,7 @@
 						</div>
 
 						<div class="col-12">
-							<button type="submit" class="btn btn-primary" data-text-send="Отправляем..." data-text="Отправить">Отправить</button>
+							<button type="submit" class="btn btn-primary"><span data-text-send="Отправляем..." data-text="Отправить">Отправить</span></button>
 						</div>
 					</div>
 				</form>
@@ -127,7 +127,7 @@
 	const $forms = document.querySelectorAll('[data-vgformsender]');
 	if ($forms.length) {
 		$forms.forEach(function (form) {
-			new VGFormSender(form, {}).submit();
+			new VGFormSender(form).submit();
 		});
 	}
 </script>

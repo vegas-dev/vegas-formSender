@@ -1,5 +1,4 @@
 @import "variables";
-@import "svg";
 
 :root {
 	--vg-fs-color-danger: #{$color-danger};
@@ -16,7 +15,18 @@
 .vg-form-sender {
 	&--alert {
 		&-block {
+			position: relative;
 			display: none;
+
+			@import "svg";
+
+			.close {
+				position: absolute;
+				right: 16px;
+				top: 16px;
+				width: 16px;
+				height: 16px;
+			}
 
 			.vg-alert {
 				display: flex;
@@ -114,6 +124,8 @@
 					}
 				}
 			}
+
+			@import "svg";
 
 			.vg-alert-content {
 				.vg-alert {

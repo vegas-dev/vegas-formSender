@@ -1,5 +1,6 @@
 import VGSender from "./VGSender";
-import {mergeDeepObject, toggleSlide} from "../../util/functions";
+import {mergeDeepObject} from "../../util/functions";
+import {toggleSlide} from "../../util/animation"
 
 class VGFormSender extends VGSender {
 	constructor(form, arg ={}) {
@@ -24,11 +25,11 @@ class VGFormSender extends VGSender {
 		};
 
 		if (this.settings.alertParams.type === 'block') {
-			this.alertElement = this.drawAlertBlock(form);
+			this.alertElement = this._drawAlertBlock(form);
 		}
 
 		if (this.settings.alertParams.type === 'modal') {
-			this.alertElement = this.drawAlertModal();
+			this.alertElement = this._drawAlertModal();
 		}
 
 		return this;
@@ -87,15 +88,17 @@ class VGFormSender extends VGSender {
 		}
 
 		if (btnSubmit) {
+			let placeText = btnSubmit.getAttribute('data-text') ? btnSubmit : btnSubmit.querySelector('[data-text]');
+
 			let btnText = {
 				send: btnSubmit.getAttribute('data-text-send') || 'Отправляем...',
 				text: btnSubmit.getAttribute('data-text') || 'Отправить'
 			}
 
 			if (condition === 'before') {
-				btnSubmit.innerHTML = btnText.send;
+				placeText.innerHTML = btnText.send;
 			} else if (condition === 'success') {
-				btnSubmit.innerHTML = btnText.text;
+				placeText.innerHTML = btnText.text;
 			}
 		}
 	}
@@ -141,6 +144,16 @@ class VGFormSender extends VGSender {
 			}
 
 			toggleSlide(el);
+
+			let elClose = el.querySelector('[data-dismiss="alert-block"]');
+			if (elClose) {
+				elClose.onclick = function () {
+					toggleSlide(el);
+					el.classList.remove('active');
+
+					return false;
+				}
+			}
 		}
 	}
 
@@ -186,7 +199,7 @@ class VGFormSender extends VGSender {
 		modal.show();
 	}
 
-	drawAlertBlock(form) {
+	_drawAlertBlock(form) {
 		const _this = this;
 
 		let el = form.querySelector('.' + _this.classes.alert.block);
@@ -196,7 +209,8 @@ class VGFormSender extends VGSender {
 			if (!elFormID) {
 				let elBlock = document.createElement('div');
 				elBlock.classList.add(_this.classes.alert.block);
-				elBlock.innerHTML = '<div class="vg-alert vg-alert-danger">' +
+				elBlock.innerHTML = '<div class="close"><a href="#" data-dismiss="alert-block">' + _this.svg.cross + '</a></div>' +
+					'<div class="vg-alert vg-alert-danger">' +
 					'					<div class="svg-area">' + _this.svg.error + '</div>' +
 					'					<div class="content-area">' +
 					'						<div class="title-area" data-alert-danger-title></div>' +
@@ -220,7 +234,7 @@ class VGFormSender extends VGSender {
 		return el;
 	}
 
-	drawAlertModal() {
+	_drawAlertModal() {
 		const _this = this;
 
 		let alertModal = document.querySelector('.' + _this.classes.alert.modal);

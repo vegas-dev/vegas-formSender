@@ -14,7 +14,7 @@ class VGSender {
 				'method': form.getAttribute('method') || 'post',
 				'fields': null,
 				'jsonParse': form.getAttribute('data-json-parse') !== 'false',
-				'redirect': form.getAttribute('data-redirect') || false,
+				'redirect': form.getAttribute('data-redirect') || null,
 				'validate': form.getAttribute('data-validate') || false, // from bootstrap < 5.3.0
 				'alert': form.getAttribute('data-alert') !== 'false',
 				'alertParams': {
@@ -97,6 +97,8 @@ class VGSender {
 				if (callback && 'success' in callback) {
 					if (typeof callback.success === 'function') callback.success(event, _this.form, data);
 				}
+
+				redirect();
 			});
 		}
 
@@ -107,7 +109,15 @@ class VGSender {
 				if (callback && 'success' in callback) {
 					if (typeof callback.success === 'function') callback.success(event, _this.form, data);
 				}
+
+				redirect();
 			});
+		}
+
+		function redirect() {
+			if (_this.settings.redirect) {
+				window.location.href = _this.settings.redirect;
+			}
 		}
 
 		return false;
