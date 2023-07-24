@@ -1,4 +1,7 @@
-import {ajax, collectData, eventHandler, setParams} from "../../util/functions";
+import {ajax, collectData, eventHandler, mergeDeepObject} from "../../util/functions";
+
+const EVENT_KEY_SUCCESS = 'vg.fs.success';
+const EVENT_KEY_BEFORE = 'vg.fs.before';
 
 const defaultParams = {
 	'action': location.href,
@@ -11,6 +14,27 @@ const defaultParams = {
 	'alertParams': {
 		type: 'modal'
 	}
+}
+
+const setParams = function (element, params, arg) {
+	let objData = {},
+		mParams = mergeDeepObject(params, arg);
+
+	let data = [].filter.call(element.attributes, function(at) { return /^data-/.test(at.name); });
+
+	for (let val of data) {
+		if (val.name === 'data-alert-type' && val.value) mParams.alertParams.type = val.value
+		if (val.name === 'data-alert') mParams.alert = val.value === 'true';
+		if (val.name === 'data-validate') mParams.validate = val.value === 'true';
+		if (val.name === 'data-json-parse') mParams.jsonParse = val.value === 'true';
+		if (val.name === 'data-json-parse') mParams.jsonParse = val.value === 'true';
+		if (val.name === 'data-redirect' && val.value) mParams.redirect = val.value;
+	}
+
+	mParams.action = element.getAttribute('action') || mParams.action;
+	mParams.method = element.getAttribute('method') || mParams.method;
+
+	return mParams;
 }
 
 class VGSender {
@@ -29,8 +53,6 @@ class VGSender {
 			this.classes = {
 				general: 'vg-form-sender'
 			}
-
-			console.log(this.settings)
 
 			if (this.settings.fields && typeof this.settings.fields == 'function') {
 				this.settings.fields = this.settings.fields();
@@ -92,6 +114,8 @@ class VGSender {
 			if (typeof callback.beforeSend === 'function') callback.beforeSend(event, _this.form);
 		}
 
+		eventHandler.on(_this.form, EVENT_KEY_BEFORE);
+
 		if (method === 'post') {
 			ajax.post(url, data, function(data) {
 				_this.form.classList.remove('was-validated');
@@ -112,7 +136,7 @@ class VGSender {
 					if (typeof callback.success === 'function') callback.success(event, _this.form, data);
 				}
 
-				eventHandler.on(_this.form, 'success');
+				eventHandler.on(_this.form, EVENT_KEY_SUCCESS);
 
 				redirect();
 			});

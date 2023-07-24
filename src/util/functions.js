@@ -111,23 +111,5 @@ const eventHandler = {
 	}
 }
 
-function setParams (element, params, arg) {
-	let objData = {},
-	mParams = mergeDeepObject(params, arg);
 
-	let data = [].filter.call(element.attributes, function(at) { return /^data-/.test(at.name); });
-
-	for (let val of data) {
-		if (val.name === 'data-alert-type' && val.value) mParams.alertParams.type = val.value
-		if (val.name === 'data-alert') mParams.alert = val.value === 'true';
-		if (val.name === 'data-validate') mParams.validate = val.value === 'true';
-		if (val.name === 'data-json-parse') mParams.jsonParse = val.value === 'true';
-		if (val.name === 'data-json-parse') mParams.jsonParse = val.value === 'true';
-		if (val.name === 'data-redirect' && val.value) mParams.redirect = val.value;
-	}
-
-	return mParams;
-}
-
-
-export {mergeDeepObject, collectData, ajax, eventHandler, setParams}
+export {mergeDeepObject, collectData, ajax, eventHandler}
