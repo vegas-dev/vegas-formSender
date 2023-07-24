@@ -1,11 +1,151 @@
+@import "variables";
+
 .vg-form-sender {
+	--vg-fs-color-danger: #{$color-danger};
+	--vg-fs-color-danger-border: #{$color-danger-border};
+	--vg-fs-color-danger-bg: #{$color-danger-bg};
+
+	--vg-fs-color-success: #{$color-success};
+	--vg-fs-color-success-border: #{$color-success-border};
+	--vg-fs-color-success-bg: #{$color-success-bg};
+
+	--vg-fs-border-radius: #{$border-radius};
+
+	@import "svg";
+
 	&--alert {
 		&-block {
 			display: none;
 
-			.alert {
+			.vg-alert {
+				display: flex;
+				align-items: center;
+				margin-bottom: 2rem;
+				border-radius: var(--vg-fs-border-radius);
+				padding: 1rem;
+
 				&:not(.show) {
 					display: none;
+				}
+
+				.svg-area {
+					flex: 0 0 70px;
+					width: 70px;
+
+					svg {
+						width: 70px;
+					}
+				}
+
+				.content-area {
+					flex: 0 0 calc(100% - 70px);
+					width: calc(100% - 70px);
+					padding-left: 16px;
+
+					.title-area {
+						font-weight: 800;
+						font-size: 24px;
+					}
+
+					.text-area {
+						font-weight: 500;
+						font-size: 18px;
+					}
+				}
+
+				&-danger {
+					border: 1px solid var(--vg-fs-color-danger-border);
+					background-color: var(--vg-fs-color-danger-bg);
+					color: var(--vg-fs-color-danger);
+				}
+
+				&-success {
+					border: 1px solid var(--vg-fs-color-success-border);
+					background-color: var(--vg-fs-color-success-bg);
+					color: var(--vg-fs-color-success);
+				}
+			}
+		}
+
+		&-modal {
+			.modal-dialog {
+				margin: 5.75rem auto;
+
+				.modal-content {
+					border-radius: 0;
+					box-shadow: none;
+					border: none;
+					position: relative;
+					padding: 45px;
+
+					.modal-close {
+						position: absolute;
+						right: -45px;
+						top: -45px;
+						opacity: .9;
+						background: transparent;
+						border: none;
+						font-size: 18px;
+						cursor: pointer;
+						transition: transform .8s ease-in-out;
+
+						svg {
+							width: 25px;
+
+							polygon {
+								fill: white !important;
+							}
+						}
+
+						&:hover {
+							transform: rotate(360deg);
+						}
+					}
+
+					.modal-footer, .modal-header {
+						border: none;
+
+						.btn {
+							line-height: 1;
+							text-transform: none;
+							font-size: 24px;
+						}
+					}
+				}
+			}
+
+			.vg-alert-content {
+				.vg-alert {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+
+					&:not(.show) {
+						display: none;
+					}
+
+					.svg-area {
+						margin-bottom: 2rem;
+					}
+
+					.title-area {
+						font-weight: 800;
+						font-size: 24px;
+						margin-bottom: .5rem;
+					}
+
+					.text-area {
+						font-weight: 500;
+						font-size: 18px;
+					}
+
+					&-danger {
+						color: var(--vg-fs-color-danger)
+					}
+
+					&-success {
+						color: var(--vg-fs-color-danger)
+					}
 				}
 			}
 		}

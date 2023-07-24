@@ -5,7 +5,7 @@
 
 sleep(2);
 
-$error = true;
+$error = false;
 
 if ($error) {
 	$sapi_type = php_sapi_name();
@@ -17,12 +17,14 @@ if ($error) {
 
 	$result = [
 		'errors' => $error,
-		'msg' => 'Failed to send email'
+		'title' => 'Oops! The error came out',
+		'msg' => 'Something went wrong, try it, in 100 years'
 	];
 } else {
 	$result = [
 		'errors' => $error,
-		'msg' => 'Your mail has bin sent'
+		'title' => 'Data received successfully',
+		'msg' => 'We will contact you as soon as possible'
 	];
 }
 
