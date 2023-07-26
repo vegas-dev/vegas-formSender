@@ -42,57 +42,55 @@ class VGFormSender extends VGSender {
 			const _this = this;
 
 			return super.submit({
-				beforeSend: function (event, form) {
+				beforeSend: function (event, self) {
 					if (callback && 'beforeSend' in callback && typeof callback.beforeSend === 'function') {
-						callback.beforeSend(event, form);
+						callback.beforeSend(event, self);
 					}
 
-					_this.btnSubmit(form, 'before');
-					_this.alert(form, {}, 'before');
+					_this.btnSubmit(self, 'before');
+					_this.alert(self, {}, 'before');
 				},
-				success: function (event, form, data) {
+				success: function (event, self, data) {
 					if (callback && 'success' in callback && typeof callback.success === 'function') {
-						callback.success(event, form, data);
+						callback.success(event, self, data);
 					}
 
 					if (_this.settings.jsonParse && typeof data === 'string') {
 						data = JSON.parse(data);
 					}
 
-					_this.btnSubmit(form, 'success');
-					_this.alert(form, data, 'success');
+					_this.btnSubmit(self, 'success');
+					_this.alert(self, data, 'success');
 				}
 			});
 		}
 	}
 
-	alert(form, data, condition) {
+	alert(self, data, condition) {
 		if (!this.isAlert) return false;
 		const _this = this;
 
+		self.alertElement = _this.alertElement;
+
 		if (_this.settings.alertParams.type === 'block') {
-			_this.alertBlock(_this.alertElement, data, condition);
+			_this.alertBlock(self, data, condition);
 		}
 
 		if (_this.settings.alertParams.type === 'modal' && condition === 'success') {
-			_this.alertModal(_this.alertElement, data, condition);
+			_this.alertModal(self, data);
 		}
 	}
 
-	btnSubmit(form, condition) {
+	btnSubmit(self, condition) {
 		if (!this.isAlert) return false;
 
-		let btnSubmit = form.querySelector('[type="submit"]');
-		if (!btnSubmit) {
-			btnSubmit = document.querySelector('[form="' + form.id + '"]');
-		}
-
+		let btnSubmit = self.extElement.button;
 		if (btnSubmit) {
 			let placeText = btnSubmit.getAttribute('data-text') ? btnSubmit : btnSubmit.querySelector('[data-text]');
 
 			let btnText = {
-				send: btnSubmit.getAttribute('data-text-send') || 'Отправляем...',
-				text: btnSubmit.getAttribute('data-text') || 'Отправить'
+				send: placeText.getAttribute('data-text-send') || 'Отправляем...',
+				text: placeText.getAttribute('data-text') || 'Отправить'
 			}
 
 			if (condition === 'before') {
@@ -103,7 +101,9 @@ class VGFormSender extends VGSender {
 		}
 	}
 
-	alertBlock(el, data, condition) {
+	alertBlock(self, data, condition) {
+		let el = self.alertElement;
+
 		if (condition === 'before') {
 			if (el.classList.contains('active')) {
 				toggleSlide(el);
@@ -157,10 +157,12 @@ class VGFormSender extends VGSender {
 		}
 	}
 
-	alertModal(el, data) {
+	alertModal(self, data) {
 		const _this = this;
 
-		let elShow = el.querySelectorAll('.show');
+		let el = self.alertElement,
+			elShow = el.querySelectorAll('.show');
+
 		if (elShow.length) {
 			for (const element of elShow) {
 				element.classList.remove('show');
@@ -174,7 +176,6 @@ class VGFormSender extends VGSender {
 				setAlertText(el, 'success');
 			}
 		}
-
 		function setAlertText (el, _class) {
 			let $alertContent = el.querySelector('.vg-alert-content');
 			if ($alertContent) {
@@ -193,6 +194,10 @@ class VGFormSender extends VGSender {
 			} else {
 				el.innerHTML = data.msg;
 			}
+		}
+
+		if (self.extElement.modal) {
+			self.extElement.modal.hide();
 		}
 
 		const modal = new bootstrap.Modal('#' + _this.classes.alert.modal, {});

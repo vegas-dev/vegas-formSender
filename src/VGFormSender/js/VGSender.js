@@ -17,17 +17,15 @@ const defaultParams = {
 }
 
 const setParams = function (element, params, arg) {
-	let objData = {},
-		mParams = mergeDeepObject(params, arg);
+	let mParams = mergeDeepObject(params, arg);
 
 	let data = [].filter.call(element.attributes, function(at) { return /^data-/.test(at.name); });
 
 	for (let val of data) {
 		if (val.name === 'data-alert-type' && val.value) mParams.alertParams.type = val.value
-		if (val.name === 'data-alert') mParams.alert = val.value === 'true';
-		if (val.name === 'data-validate') mParams.validate = val.value === 'true';
-		if (val.name === 'data-json-parse') mParams.jsonParse = val.value === 'true';
-		if (val.name === 'data-json-parse') mParams.jsonParse = val.value === 'true';
+		if (val.name === 'data-alert') mParams.alert = val.value !== 'false';
+		if (val.name === 'data-validate') mParams.validate = val.value !== 'false';
+		if (val.name === 'data-json-parse') mParams.jsonParse = val.value !== 'false';
 		if (val.name === 'data-redirect' && val.value) mParams.redirect = val.value;
 	}
 
@@ -40,7 +38,7 @@ const setParams = function (element, params, arg) {
 class VGSender {
 	constructor(form, arg = {}) {
 		this.form = form;
-		this.settings = arg;
+		this.extElement = {};
 
 		if (!form) {
 			console.error('Первый параметр не должен быть пустым');
@@ -73,6 +71,15 @@ class VGSender {
 			_this.form.classList.add('needs-validation');
 		}
 
+		let modalParent = _this.form.closest('.modal');
+		if (modalParent) {
+			_this.extElement.modal = new  bootstrap.Modal(modalParent);
+		}
+
+		let btnSubmit = _this.form.querySelector('[type="submit"]');
+		if (!btnSubmit) btnSubmit = document.querySelector('[form="' + _this.form.id + '"]');
+		_this.extElement.button = btnSubmit;
+
 		_this.isInit = true;
 	}
 
@@ -102,7 +109,7 @@ class VGSender {
 		};
 	}
 
-	request(callback, event) {
+	request(callback, event, modal) {
 		if (!this.isInit) return false;
 		const _this = this;
 
@@ -111,7 +118,7 @@ class VGSender {
 			data = _this.data;
 
 		if (callback && 'beforeSend' in callback) {
-			if (typeof callback.beforeSend === 'function') callback.beforeSend(event, _this.form);
+			if (typeof callback.beforeSend === 'function') callback.beforeSend(event, _this);
 		}
 
 		eventHandler.on(_this.form, EVENT_KEY_BEFORE);
@@ -121,8 +128,10 @@ class VGSender {
 				_this.form.classList.remove('was-validated');
 
 				if (callback && 'success' in callback) {
-					if (typeof callback.success === 'function') callback.success(event, _this.form, data);
+					if (typeof callback.success === 'function') callback.success(event, _this, data);
 				}
+
+				eventHandler.on(_this.form, EVENT_KEY_SUCCESS);
 
 				redirect();
 			});
@@ -133,7 +142,7 @@ class VGSender {
 				_this.form.classList.remove('was-validated');
 
 				if (callback && 'success' in callback) {
-					if (typeof callback.success === 'function') callback.success(event, _this.form, data);
+					if (typeof callback.success === 'function') callback.success(event, _this, data);
 				}
 
 				eventHandler.on(_this.form, EVENT_KEY_SUCCESS);
