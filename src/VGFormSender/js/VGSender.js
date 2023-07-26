@@ -1,4 +1,5 @@
 import {ajax, collectData, eventHandler, mergeDeepObject} from "../../util/functions";
+import {Modal} from "bootstrap";
 
 const EVENT_KEY_SUCCESS = 'vg.fs.success';
 const EVENT_KEY_BEFORE = 'vg.fs.before';
@@ -73,7 +74,7 @@ class VGSender {
 
 		let modalParent = _this.form.closest('.modal');
 		if (modalParent) {
-			_this.extElement.modal = new  bootstrap.Modal(modalParent);
+			_this.extElement.modal = new Modal(modalParent);
 		}
 
 		let btnSubmit = _this.form.querySelector('[type="submit"]');
@@ -109,7 +110,7 @@ class VGSender {
 		};
 	}
 
-	request(callback, event, modal) {
+	request(callback, event) {
 		if (!this.isInit) return false;
 		const _this = this;
 

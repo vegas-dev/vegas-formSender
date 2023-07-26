@@ -1,6 +1,7 @@
 import VGSender from "./VGSender";
 import {mergeDeepObject} from "../../util/functions";
-import {toggleSlide} from "../../util/animation"
+import {toggleSlide} from "../../util/animation";
+import {Modal} from "bootstrap";
 
 class VGFormSender extends VGSender {
 	constructor(form, arg ={}) {
@@ -200,7 +201,7 @@ class VGFormSender extends VGSender {
 			self.extElement.modal.hide();
 		}
 
-		const modal = new bootstrap.Modal('#' + _this.classes.alert.modal, {});
+		const modal = new Modal('#' + _this.classes.alert.modal, {});
 		modal.show();
 	}
 
