@@ -1,5 +1,5 @@
 import {ajax, collectData, eventHandler, mergeDeepObject} from "../../util/functions";
-import {Modal} from "bootstrap";
+import VGFormPlugins from "./VGFormPlugins";
 
 const EVENT_KEY_SUCCESS = 'vg.fs.success';
 const EVENT_KEY_BEFORE = 'vg.fs.before';
@@ -14,7 +14,15 @@ const defaultParams = {
 	'alert': true,
 	'alertParams': {
 		type: 'modal'
-	}
+	},
+	'plugins': [
+		{
+			'showPass': {
+				enabled: true,
+				params: {}
+			}
+		}
+	]
 }
 
 const setParams = function (element, params, arg) {
@@ -28,6 +36,22 @@ const setParams = function (element, params, arg) {
 		if (val.name === 'data-validate') mParams.validate = val.value !== 'false';
 		if (val.name === 'data-json-parse') mParams.jsonParse = val.value !== 'false';
 		if (val.name === 'data-redirect' && val.value) mParams.redirect = val.value;
+		if (val.name === 'data-plugins' && val.value) mParams.plugins = dataPlugins(JSON.parse(val.value));
+	}
+
+	function dataPlugins(value) {
+		let p = {}
+
+		for (const plugin of params.plugins) {
+			let namePlugin = Object.keys(plugin)[0],
+				nameModule = Object.keys(value)[0];
+
+			if (namePlugin === nameModule) {
+				p = mergeDeepObject(plugin, value);
+			}
+		}
+
+		return p;
 	}
 
 	mParams.action = element.getAttribute('action') || mParams.action;
@@ -74,12 +98,24 @@ class VGSender {
 
 		let modalParent = _this.form.closest('.modal');
 		if (modalParent) {
-			_this.extElement.modal = new Modal(modalParent);
+			if (typeof bootstrap !== "undefined") {
+				_this.extElement.modal = new bootstrap.Modal(modalParent);
+			} else if (typeof Modal !== "undefined") {
+				_this.extElement.modal = new Modal(modalParent);
+			} else {
+				_this.settings.alertParams = {
+					type: 'block'
+				}
+			}
 		}
 
 		let btnSubmit = _this.form.querySelector('[type="submit"]');
 		if (!btnSubmit) btnSubmit = document.querySelector('[form="' + _this.form.id + '"]');
 		_this.extElement.button = btnSubmit;
+
+		if ('plugins' in _this.settings) {
+			new VGFormPlugins(_this).init();
+		}
 
 		_this.isInit = true;
 	}
