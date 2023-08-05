@@ -55,12 +55,20 @@ class VGFormSender extends VGSender {
 						callback.success(event, self, data);
 					}
 
-					if (_this.settings.jsonParse && typeof data === 'string') {
-						data = JSON.parse(data);
-					}
-
 					_this.btnSubmit(self, 'success');
-					_this.alert(self, data, 'success');
+
+					if (_this.settings.jsonParse && typeof data === 'string') {
+						let parserData = {};
+
+						try {
+							parserData = JSON.parse(data);
+							_this.alert(self, parserData, 'success');
+						} catch (e) {
+							return console.error(e);
+						}
+					} else {
+						_this.alert(self, data, 'success');
+					}
 				}
 			});
 		}
