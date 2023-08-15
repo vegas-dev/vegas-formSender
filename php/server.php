@@ -1,18 +1,22 @@
 <?php
+ini_set("display_errors", "1");
+error_reporting(E_ALL);
+
 /**
  * Created by vegas s.
  */
 
 sleep(2);
 
-$error = true;
+$error = false;
 
 if ($error) {
 	$sapi_type = php_sapi_name();
 	if (substr($sapi_type, 0, 3) == 'cgi') {
 		header("Status: 404 Not Found");
 	} else {
-		header("HTTP/1.1 404 Not Found");
+		//header("HTTP/1.1 404 Not Found");
+		header("HTTP/1.1 500 No Record Found");
 	}
 
 	$result = [

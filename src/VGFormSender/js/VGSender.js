@@ -2,6 +2,7 @@ import {ajax, collectData, eventHandler, mergeDeepObject} from "../../util/funct
 import VGFormPlugins from "./VGFormPlugins";
 
 const EVENT_KEY_SUCCESS = 'vg.fs.success';
+const EVENT_KEY_ERROR = 'vg.fs.error';
 const EVENT_KEY_BEFORE = 'vg.fs.before';
 
 const defaultParams = {
@@ -161,31 +162,35 @@ class VGSender {
 		eventHandler.on(_this.form, EVENT_KEY_BEFORE);
 
 		if (method === 'post') {
-			ajax.post(url, data, function(data) {
-				_this.form.classList.remove('was-validated');
-
-				if (callback && 'success' in callback) {
-					if (typeof callback.success === 'function') callback.success(event, _this, data);
-				}
-
-				eventHandler.on(_this.form, EVENT_KEY_SUCCESS);
-
-				redirect();
+			ajax.post(url, data, function(status, data) {
+				answer(status, data);
 			});
 		}
 
 		if (method === 'get') {
-			ajax.get(url, data, function(data) {
-				_this.form.classList.remove('was-validated');
+			ajax.get(url, data, function(status, data) {
+				answer(status, data);
+			});
+		}
 
+		function answer(status, data) {
+			_this.form.classList.remove('was-validated');
+
+			if (typeof status === 'string' && status === 'error') {
+				if (callback && 'error' in callback) {
+					if (typeof callback.error === 'function') callback.error(event, _this, data);
+				}
+
+				eventHandler.on(_this.form, EVENT_KEY_ERROR);
+			} else {
 				if (callback && 'success' in callback) {
 					if (typeof callback.success === 'function') callback.success(event, _this, data);
 				}
 
 				eventHandler.on(_this.form, EVENT_KEY_SUCCESS);
+			}
 
-				redirect();
-			});
+			redirect();
 		}
 
 		function redirect() {

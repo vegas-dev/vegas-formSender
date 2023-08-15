@@ -42,57 +42,64 @@ class VGFormSender extends VGSender {
 			const _this = this;
 
 			return super.submit({
-				beforeSend: function (event, self) {
+				beforeSend: function (event, vgSender) {
 					if (callback && 'beforeSend' in callback && typeof callback.beforeSend === 'function') {
-						callback.beforeSend(event, self);
+						callback.beforeSend(event, vgSender);
 					}
 
-					_this.btnSubmit(self, 'before');
-					_this.alert(self, {}, 'before');
+					_this.btnSubmit(vgSender, 'beforeSend');
+					_this.alert(vgSender, null, 'beforeSend');
 				},
-				success: function (event, self, data) {
-					if (callback && 'success' in callback && typeof callback.success === 'function') {
-						callback.success(event, self, data);
+
+				error: function (event, vgSender, data) {
+					if (callback && 'error' in callback && typeof callback.error === 'function') {
+						callback.error(event, vgSender, data);
 					}
 
-					_this.btnSubmit(self, 'success');
+					_this.btnSubmit(vgSender, 'default');
 
 					if (_this.settings.jsonParse && typeof data === 'string') {
 						let parserData = {};
 
 						try {
 							parserData = JSON.parse(data);
-							_this.alert(self, parserData, 'success');
+							_this.alert(vgSender, parserData, 'error');
 						} catch (e) {
-							return console.error(e);
+							_this.alert(vgSender, data, 'error');
 						}
 					} else {
-						_this.alert(self, data, 'success');
+						_this.alert(vgSender, data, 'error');
+					}
+				},
+
+				success: function (event, vgSender, data) {
+					if (callback && 'success' in callback && typeof callback.success === 'function') {
+						callback.success(event, vgSender, data);
+					}
+
+					_this.btnSubmit(vgSender, 'default');
+
+					if (_this.settings.jsonParse && typeof data === 'string') {
+						let parserData = {};
+
+						try {
+							parserData = JSON.parse(data);
+							_this.alert(vgSender, parserData, 'success');
+						} catch (e) {
+							_this.alert(vgSender, data, 'success');
+						}
+					} else {
+						_this.alert(vgSender, data, 'success');
 					}
 				}
 			});
 		}
 	}
 
-	alert(self, data, condition) {
-		if (!this.isAlert) return false;
-		const _this = this;
-
-		self.alertElement = _this.alertElement;
-
-		if (_this.settings.alertParams.type === 'block') {
-			_this.alertBlock(self, data, condition);
-		}
-
-		if (_this.settings.alertParams.type === 'modal' && condition === 'success') {
-			_this.alertModal(self, data);
-		}
-	}
-
-	btnSubmit(self, condition) {
+	btnSubmit(vgSender, status) {
 		if (!this.isAlert) return false;
 
-		let btnSubmit = self.extElement.button;
+		let btnSubmit = vgSender.extElement.button;
 		if (btnSubmit) {
 			let placeText = btnSubmit.getAttribute('data-text') ? btnSubmit : btnSubmit.querySelector('[data-text]');
 
@@ -101,58 +108,67 @@ class VGFormSender extends VGSender {
 				text: placeText.getAttribute('data-text') || 'Отправить'
 			}
 
-			if (condition === 'before') {
+			if (status === 'beforeSend') {
 				placeText.innerHTML = btnText.send;
-			} else if (condition === 'success') {
+			} else if (status === 'default') {
 				placeText.innerHTML = btnText.text;
 			}
 		}
 	}
 
-	alertBlock(self, data, condition) {
-		let el = self.alertElement;
+	alert(vgSender, data, status) {
+		if (!this.isAlert) return false;
+		const _this = this;
 
-		if (condition === 'before') {
+		vgSender.alertElement = _this.alertElement;
+
+		if (_this.settings.alertParams.type === 'block') {
+			_this.alertBlock(vgSender, data, status);
+		}
+
+		if (_this.settings.alertParams.type === 'modal') {
+			_this.alertModal(vgSender, data, status);
+		}
+	}
+
+	alertBlock(vgSender, data, status) {
+		let el = vgSender.alertElement;
+
+		if (status === 'beforeSend') {
 			if (el.classList.contains('active')) {
 				toggleSlide(el);
 
 				el.classList.remove('active');
 			}
-		} else if (condition === 'success') {
-			el.classList.add('active')
+		} else if (status === 'success') {
+			setActiveBlock(el);
 
+			setAlertText(el, data,'success');
+
+			toggleSlide(el);
+
+			closeCurrentBlock(el);
+		} else if (status === 'error') {
+			setActiveBlock(el);
+
+			setAlertText(el, data,'danger');
+
+			toggleSlide(el);
+
+			closeCurrentBlock(el);
+		}
+
+		function setActiveBlock(el) {
+			el.classList.add('active');
 			let elShow = el.querySelectorAll('.show');
 			if (elShow.length) {
 				for (const element of elShow) {
 					element.classList.remove('show');
 				}
 			}
+		}
 
-			if (data && 'errors' in data) {
-				if (data.errors) {
-					setAlertText(el, 'danger');
-				} else {
-					setAlertText(el, 'success');
-				}
-			}
-
-			function setAlertText (el, _class) {
-				let $alert = el.querySelector('.vg-alert-' + _class);
-				if ($alert) {
-					let $text = $alert.querySelector('[data-alert-'+ _class +'-text]');
-					if ($text && ('msg' in data)) $text.innerHTML = data.msg;
-
-					let $title = $alert.querySelector('[data-alert-'+ _class +'-title]');
-					if ($title && ('title' in data)) $title.innerHTML = data.title;
-
-					$alert.classList.add('show');
-				} else {
-					el.innerHTML = data.msg
-				}
-			}
-
-			toggleSlide(el);
-
+		function closeCurrentBlock(el) {
 			let elClose = el.querySelector('[data-dismiss="alert-block"]');
 			if (elClose) {
 				elClose.onclick = function () {
@@ -163,13 +179,34 @@ class VGFormSender extends VGSender {
 				}
 			}
 		}
+
+		function setAlertText (el, data, _class) {
+			let $alert = el.querySelector('.vg-alert-' + _class);
+			if ($alert) {
+				let $text = $alert.querySelector('[data-alert-'+ _class +'-text]');
+				if ($text) {
+					if (typeof data === 'string') {
+						$text.innerHTML = data;
+					} else if (('msg' in data)) {
+						$text.innerHTML = data.msg;
+
+						let $title = $alert.querySelector('[data-alert-'+ _class +'-title]');
+						if ($title && ('title' in data)) $title.innerHTML = data.title;
+					}
+				}
+
+				$alert.classList.add('show');
+			} else {
+				el.innerHTML = data.msg
+			}
+		}
 	}
 
-	alertModal(self, data) {
+	alertModal(vgSender, data, status) {
 		const _this = this;
 
-		let el = self.alertElement,
-			elShow = el.querySelectorAll('.show');
+		let el = vgSender.alertElement,
+		elShow = el.querySelectorAll('.show');
 
 		if (elShow.length) {
 			for (const element of elShow) {
@@ -177,50 +214,60 @@ class VGFormSender extends VGSender {
 			}
 		}
 
-		if (data && 'errors' in data) {
-			if (data.errors) {
-				setAlertText(el, 'danger');
-			} else {
-				setAlertText(el, 'success');
+		if (data !== null) {
+			if (vgSender.extElement.modal) {
+				vgSender.extElement.modal.hide();
 			}
+
+			switch (status) {
+				case 'success':
+					setAlertText(el, data, 'success');
+					break;
+				case 'error':
+					setAlertText(el, data, 'danger');
+					break;
+			}
+
+			let modal;
+
+			if (typeof bootstrap !== "undefined") {
+				modal = new bootstrap.Modal('#' + _this.classes.alert.modal, {});
+			} else if (typeof Modal !== "undefined") {
+				modal = new Modal('#' + _this.classes.alert.modal, {});
+			} else {
+				console.error('The Modal component was not found')
+
+				return false;
+			}
+
+			modal.show();
 		}
-		function setAlertText (el, _class) {
+
+		function setAlertText (el, data, _class) {
 			let $alertContent = el.querySelector('.vg-alert-content');
 			if ($alertContent) {
 				let $alert = $alertContent.querySelector('.vg-alert-' + _class );
 				if ($alert) {
-					let $title = $alert.querySelector('[data-alert-'+ _class +'-title]');
-					if ($title && 'msg' in data) $title.innerHTML = data.title;
-
 					let $text = $alert.querySelector('[data-alert-'+ _class +'-text]');
-					if ($text && 'msg' in data) $text.innerHTML = data.msg;
+					if (typeof data === 'string') {
+						$text.innerHTML = data
+					} else {
+						let $title = $alert.querySelector('[data-alert-'+ _class +'-title]');
+						if ($title && 'msg' in data) $title.innerHTML = data.title;
+
+						if ($text && 'msg' in data) $text.innerHTML = data.msg;
+					}
 
 					$alert.classList.add('show');
 				} else {
-					$alert.innerHTML = data.msg;
+					if (typeof data === 'string') $alert.innerHTML = data;
+					else $alert.innerHTML = data.msg;
 				}
 			} else {
-				el.innerHTML = data.msg;
+				if (typeof data === 'string') el.innerHTML = data;
+				else el.innerHTML = data.msg;
 			}
 		}
-
-		if (self.extElement.modal) {
-			self.extElement.modal.hide();
-		}
-
-		let modal;
-
-		if (typeof bootstrap !== "undefined") {
-			modal = new bootstrap.Modal('#' + _this.classes.alert.modal, {});
-		} else if (typeof Modal !== "undefined") {
-			modal = new Modal('#' + _this.classes.alert.modal, {});
-		} else {
-			console.error('The Modal component was not found')
-
-			return false;
-		}
-
-		modal.show();
 	}
 
 	_drawAlertBlock(form) {

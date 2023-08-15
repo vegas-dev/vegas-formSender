@@ -80,7 +80,14 @@ ajax.send = function (url, callback, method, data, async) {
 	x.open(method, url, async);
 	x.onreadystatechange = function () {
 		if (x.readyState === 4) {
-			callback(x.responseText)
+			switch (x.status) {
+				case 200:
+					callback('success', x.responseText)
+				break;
+				default:
+					callback('error', x.responseText)
+				break;
+			}
 		}
 	};
 	if (method === 'POST') {
