@@ -15,8 +15,7 @@ if ($error) {
 	if (substr($sapi_type, 0, 3) == 'cgi') {
 		header("Status: 404 Not Found");
 	} else {
-		//header("HTTP/1.1 404 Not Found");
-		header("HTTP/1.1 500 No Record Found");
+		header("HTTP/1.1 404 Not Found");
 	}
 
 	$result = [
