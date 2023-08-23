@@ -1,4 +1,4 @@
-import {ajax, collectData, eventHandler, mergeDeepObject} from "../../util/functions";
+import {ajax, collectData, eventHandler, mergeDeepObject, setModal} from "../../util/functions";
 import VGFormPlugins from "./VGFormPlugins";
 
 const EVENT_KEY_SUCCESS = 'vg.fs.success';
@@ -98,17 +98,7 @@ class VGSender {
 		}
 
 		let modalParent = _this.form.closest('.modal');
-		if (modalParent) {
-			if (typeof bootstrap !== "undefined") {
-				_this.extElement.modal = new bootstrap.Modal(modalParent);
-			} else if (typeof Modal !== "undefined") {
-				_this.extElement.modal = new Modal(modalParent);
-			} else {
-				_this.settings.alertParams = {
-					type: 'block'
-				}
-			}
-		}
+		if (modalParent) _this.extElement.modal = setModal(modalParent);
 
 		let btnSubmit = _this.form.querySelector('[type="submit"]');
 		if (!btnSubmit) btnSubmit = document.querySelector('[form="' + _this.form.id + '"]');

@@ -3,7 +3,7 @@
  * @param objects
  * @returns {*}
  */
-function mergeDeepObject(...objects) {
+const mergeDeepObject = function (...objects) {
 	const isObject = obj => obj && typeof obj === 'object';
 
 	return objects.reduce((prev, obj) => {
@@ -31,7 +31,7 @@ function mergeDeepObject(...objects) {
  * @param data
  * @param fields
  */
-function collectData(data, fields) {
+const collectData = function(data, fields) {
 	for (let name in fields) {
 		if (typeof fields[name] === 'object') {
 			for (let key in fields[name]) {
@@ -48,66 +48,75 @@ function collectData(data, fields) {
 	return data;
 }
 
-const ajax = {};
-ajax.x = function () {
-	if (typeof XMLHttpRequest !== 'undefined') {
-		return new XMLHttpRequest();
-	}
-	let versions = [
-		"MSXML2.XmlHttp.6.0",
-		"MSXML2.XmlHttp.5.0",
-		"MSXML2.XmlHttp.4.0",
-		"MSXML2.XmlHttp.3.0",
-		"MSXML2.XmlHttp.2.0",
-		"Microsoft.XmlHttp"
-	];
-
-	let xhr;
-	for (let i = 0; i < versions.length; i++) {
-		try {
-			xhr = new ActiveXObject(versions[i]);
-			break;
-		} catch (e) {}
-	}
-	return xhr;
-};
-
-ajax.send = function (url, callback, method, data, async) {
-	if (async === undefined) {
-		async = true;
-	}
-	let x = ajax.x();
-	x.open(method, url, async);
-	x.onreadystatechange = function () {
-		if (x.readyState === 4) {
-			switch (x.status) {
-				case 200:
-					callback('success', x.responseText)
-				break;
-				default:
-					callback('error', x.responseText)
-				break;
-			}
+/**
+ * AJAX REQUEST
+ * @type {{post: ajax.post, get: ajax.get, x: ((function(): (XMLHttpRequest))|*), send: ajax.send}}
+ */
+const ajax = {
+	x: function () {
+		if (typeof XMLHttpRequest !== 'undefined') {
+			return new XMLHttpRequest();
 		}
-	};
-	if (method === 'POST') {
-		//x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		let versions = [
+			"MSXML2.XmlHttp.6.0",
+			"MSXML2.XmlHttp.5.0",
+			"MSXML2.XmlHttp.4.0",
+			"MSXML2.XmlHttp.3.0",
+			"MSXML2.XmlHttp.2.0",
+			"Microsoft.XmlHttp"
+		];
+
+		let xhr;
+		for (let i = 0; i < versions.length; i++) {
+			try {
+				xhr = new ActiveXObject(versions[i]);
+				break;
+			} catch (e) {}
+		}
+		return xhr;
+	},
+
+	send: function (url, callback, method, data, async) {
+		if (async === undefined) {
+			async = true;
+		}
+		let x = ajax.x();
+		x.open(method, url, async);
+		x.onreadystatechange = function () {
+			if (x.readyState === 4) {
+				switch (x.status) {
+					case 200:
+						callback('success', x.responseText)
+						break;
+					default:
+						callback('error', x.responseText)
+						break;
+				}
+			}
+		};
+		if (method === 'POST') {
+			//x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		}
+		x.send(data)
+	},
+
+	get: function (url, data, callback, async) {
+		let query = [];
+		for (let key of data) {
+			query.push(encodeURIComponent(key[0]) + '=' + encodeURIComponent(key[1]));
+		}
+		ajax.send(url + (query.length ? '?' + query.join('&') : ''), callback, 'GET', null, async)
+	},
+
+	post: function (url, data, callback, async) {
+		ajax.send(url, callback, 'POST', data, async)
 	}
-	x.send(data)
 };
 
-ajax.get = function (url, data, callback, async) {
-	let query = [];
-	for (let key of data) {
-		query.push(encodeURIComponent(key[0]) + '=' + encodeURIComponent(key[1]));
-	}
-	ajax.send(url + (query.length ? '?' + query.join('&') : ''), callback, 'GET', null, async)
-};
-
-ajax.post = function (url, data, callback, async) {
-	ajax.send(url, callback, 'POST', data, async)
-};
-
+/**
+ * EVENTS
+ * @type {{on: eventHandler.on}}
+ */
 const eventHandler = {
 	on: function (element, event) {
 		const eventSuccess = new CustomEvent(event, {
@@ -118,5 +127,28 @@ const eventHandler = {
 	}
 }
 
+/**
+ * Set Modal
+ * @param el
+ * @returns {bootstrap.Modal|Modal|boolean}
+ */
+const setModal = function (el) {
+	if (!el) return false;
 
-export {mergeDeepObject, collectData, ajax, eventHandler}
+	if (typeof el === "string") {
+		el = '#' + el;
+	}
+
+	if (typeof bootstrap !== "undefined") {
+		return new bootstrap.Modal(el, {});
+	} else if (typeof Modal !== "undefined") {
+		return new Modal(el, {});
+	} else {
+		console.error('The Modal component was not found')
+
+		return false;
+	}
+}
+
+
+export {mergeDeepObject, collectData, setModal, ajax, eventHandler}
