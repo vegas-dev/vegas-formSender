@@ -101,17 +101,23 @@ class VGFormSender extends VGSender {
 
 		let btnSubmit = vgSender.extElement.button;
 		if (btnSubmit) {
-			let placeText = btnSubmit.getAttribute('data-text') ? btnSubmit : btnSubmit.querySelector('[data-text]');
-
 			let btnText = {
-				send: placeText.getAttribute('data-text-send') || 'Отправляем...',
-				text: placeText.getAttribute('data-text') || 'Отправить'
+				send: 'Отправляем...',
+				text: 'Отправить'
+			};
+
+			if (btnSubmit.hasAttribute('data-text')) {
+				btnText.text = btnSubmit.getAttribute('data-text');
+			}
+
+			if (btnSubmit.hasAttribute('data-text-send')) {
+				btnText.send = btnSubmit.getAttribute('data-text-send');
 			}
 
 			if (status === 'beforeSend') {
-				placeText.innerHTML = btnText.send;
+				btnSubmit.innerHTML = btnText.send;
 			} else if (status === 'default') {
-				placeText.innerHTML = btnText.text;
+				btnSubmit.innerHTML = btnText.text;
 			}
 		}
 	}
