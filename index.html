@@ -21,8 +21,7 @@
 				<div class="col-lg-4 col-xl-3">
 					<div class="logo">
 						<a href="https://vegas-dev.com/" target="_blank">
-							<img src="https://vegas-dev.com/assets/_frontend/images/logo/logo.svg" class="img-fluid"
-							     alt="vegas dev">
+							<img src="https://vegas-dev.com/assets/_frontend/images/logo/logo.svg" class="img-fluid" alt="vegas dev">
 						</a>
 					</div>
 				</div>
@@ -31,7 +30,7 @@
 	</header>
 	<main class="container">
 		<div class="mt-5">
-			<form action="/php/server.php" method="POST" class="form" id="form-simple" data-vgformsender>
+			<form action="/php/server.php" method="POST" class="form" id="form-simple" data-alert-type="block" data-vgformsender>
 				<input type="hidden" name="form" value="simple">
 
 				<div class="row">
@@ -92,7 +91,7 @@
 		</div>
 
 		<div class="mt-5">
-			<form action="/php/server.php" method="GET" data-validate="true" id="form-feedback" data-alert-type="modal" data-vgformsender>
+			<form action="/php/server.php" method="GET" data-validate="true" id="form-feedback" data-vgformsender>
 				<input type="hidden" name="form" value="feedback">
 
 				<div class="row">
@@ -135,7 +134,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form action="/php/server.php" method="post" data-alert-type="modal" id="form-in-modal" data-vgformsender>
+				<form action="/php/server.php" method="post" id="form-in-modal" data-vgformsender>
 					<div class="row">
 						<div class="col-12">
 							<div class="form-floating mb-3">
@@ -167,16 +166,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/demo/js/script.js"></script>
-<script src="/dist/vgformsender.umd.js"></script>
+<script src="/dist/vgformsender.js"></script>
 <script>
 	const $forms = document.querySelectorAll('[data-vgformsender]');
 	if ($forms.length) {
 		$forms.forEach(function (form) {
-			new VGFormSender(form, {
-				alertParams: {
-					type: 'block'
-				}
-			}).submit();
+			new VGFormSender(form).submit();
 		});
 	}
 </script>

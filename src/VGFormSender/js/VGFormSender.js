@@ -12,7 +12,7 @@ class VGFormSender extends VGSender {
 	constructor(form, arg ={}) {
 		super(form, arg);
 
-		this.isAlert = this.settings.alert;
+		this.isAlert = this.settings.alert.enabled;
 
 		let classes = {
 			alert: {
@@ -24,19 +24,19 @@ class VGFormSender extends VGSender {
 
 		this.alertElement = null;
 
-		if (this.settings.alertParams.type === 'block') {
+		/*if (this.settings.alertParams.type === 'block') {
 			this.alertElement = this._drawAlertBlock(form);
 		}
 
 		if (this.settings.alertParams.type === 'modal') {
 			this.alertElement = this._drawAlertModal();
-		}
+		}*/
 
 		return this;
 	}
 
 	submit(callback) {
-		if (!this.isAlert) {
+		/*if (!this.isAlert) {
 			return super.submit(callback);
 		} else {
 			const _this = this;
@@ -93,7 +93,7 @@ class VGFormSender extends VGSender {
 					}
 				}
 			});
-		}
+		}*/
 	}
 
 	btnSubmit(vgSender, status) {

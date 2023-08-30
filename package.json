@@ -28,8 +28,9 @@
 		"build:js": "rollup -c",
 		"postversion": "git push && git push --tags && npm publish --access=public",
 		"test": "karma start karma.conf.js",
-		"version": "npm run build:js && npm run build:css && git add .",
-		"watch": "npm-watch"
+		"version": "npm run build:js && npm run build:css && git add",
+		"watch": "rollup -c -w",
+		"git": "git push && git push --tags"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.16.7",
@@ -69,22 +70,6 @@
 		"not dead",
 		"not op_mini all"
 	],
-	"watch": {
-		"build:css": {
-			"patterns": [
-				"src"
-			],
-			"extensions": "scss",
-			"quiet": true
-		},
-		"build:js": {
-			"patterns": [
-				"src"
-			],
-			"extensions": "js",
-			"quiet": true
-		}
-	},
 	"dependencies": {
 
 	}
