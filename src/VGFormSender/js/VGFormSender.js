@@ -24,19 +24,19 @@ class VGFormSender extends VGSender {
 
 		this.alertElement = null;
 
-		/*if (this.settings.alertParams.type === 'block') {
+		if (this.settings.alert.params.type === 'block') {
 			this.alertElement = this._drawAlertBlock(form);
 		}
 
-		if (this.settings.alertParams.type === 'modal') {
+		if (this.settings.alert.params.type === 'modal') {
 			this.alertElement = this._drawAlertModal();
-		}*/
+		}
 
 		return this;
 	}
 
 	submit(callback) {
-		/*if (!this.isAlert) {
+		if (!this.isAlert) {
 			return super.submit(callback);
 		} else {
 			const _this = this;
@@ -93,7 +93,7 @@ class VGFormSender extends VGSender {
 					}
 				}
 			});
-		}*/
+		}
 	}
 
 	btnSubmit(vgSender, status) {
@@ -108,10 +108,22 @@ class VGFormSender extends VGSender {
 
 			if (btnSubmit.hasAttribute('data-text')) {
 				btnText.text = btnSubmit.getAttribute('data-text');
+			} else {
+				let $btnText = btnSubmit.querySelector('[data-text]');
+				if ($btnText) {
+					btnText.text = $btnText.getAttribute('data-text');
+					btnSubmit = $btnText;
+				}
 			}
 
 			if (btnSubmit.hasAttribute('data-text-send')) {
 				btnText.send = btnSubmit.getAttribute('data-text-send');
+			} else {
+				let $btnTextSend = btnSubmit.querySelector('[data-text-send]');
+				if ($btnTextSend) {
+					btnText.send = $btnTextSend.getAttribute('data-text-send');
+					btnSubmit = $btnTextSend;
+				}
 			}
 
 			if (status === 'beforeSend') {
@@ -128,11 +140,11 @@ class VGFormSender extends VGSender {
 
 		vgSender.alertElement = _this.alertElement;
 
-		if (_this.settings.alertParams.type === 'block') {
+		if (_this.settings.alert.params.type === 'block') {
 			_this.alertBlock(vgSender, data, status);
 		}
 
-		if (_this.settings.alertParams.type === 'modal') {
+		if (_this.settings.alert.params.type === 'modal') {
 			_this.alertModal(vgSender, data, status);
 		}
 	}

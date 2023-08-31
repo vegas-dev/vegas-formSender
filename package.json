@@ -1,6 +1,6 @@
 {
 	"name": "vgformsender",
-	"version": "3.0.7",
+	"version": "3.0.8",
 	"description": "Sending data from the form",
 	"author": {
 		"name": "Vegas Studio",
@@ -29,8 +29,7 @@
 		"postversion": "git push && git push --tags && npm publish --access=public",
 		"test": "karma start karma.conf.js",
 		"version": "npm run build:js && npm run build:css && git add",
-		"watch": "rollup -c -w",
-		"git": "git push && git push --tags"
+		"watch": "rollup -c -w"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.16.7",
@@ -70,7 +69,5 @@
 		"not dead",
 		"not op_mini all"
 	],
-	"dependencies": {
-
-	}
+	"dependencies": {}
 }
