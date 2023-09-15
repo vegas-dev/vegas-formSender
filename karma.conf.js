@@ -8,14 +8,9 @@ module.exports = function (config) {
 		files: [
 			{ pattern: "dist/*.css", watched: false, included: true },
 			{ pattern: "dist/*.js", type: "module", included: false, served: true },
-			{ pattern: "tests/**/*.png", watched: false, included: false, served: true, nocache: false },
-			{ pattern: "tests/**/*.jpg", watched: false, included: false, served: true, nocache: false },
-			{ pattern: "tests/**/*.html", watched: false, included: false, served: true, nocache: false },
-			{ pattern: "src/shared/**/*.js", type: "module", included: true, served: true },
-			{ pattern: "tests/*.js", type: "module" },
 		],
 		proxies: {
-			"/assets/": "/base/tests/assets/",
+			"/assets/": "/",
 		},
 		reporters: ["progress"],
 		port: 9876,

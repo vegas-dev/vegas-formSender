@@ -24,12 +24,11 @@
 		"url": "https://github.com/vegas-dev/vegas-formSender/issues"
 	},
 	"scripts": {
+		"watch": "rollup -c -w",
 		"build:css": "node build-css.js",
 		"build:js": "rollup -c",
-		"postversion": "git push && git push --tags && npm publish --access=public",
-		"test": "karma start karma.conf.js",
-		"version": "npm run build:js && npm run build:css && git add",
-		"watch": "rollup -c -w"
+		"production": "npm run build:js && npm run build:css",
+		"publish": "npm run build:js && npm run build:css && npm publish --access=public"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.16.7",
