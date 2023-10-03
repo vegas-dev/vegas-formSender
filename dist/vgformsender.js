@@ -139,10 +139,12 @@
 			el = '#' + el;
 		}
 
-		if (typeof bootstrap !== "undefined") {
-			return new bootstrap.Modal(el, {});
+		if (typeof $ !== 'undefined') {
+			return $(el);
 		} else if (typeof Modal !== "undefined") {
 			return new Modal(el, {});
+		} else if (typeof bootstrap !== "undefined") {
+			return new bootstrap.Modal(el, {});
 		} else {
 			console.error('The Modal component was not found');
 
@@ -766,7 +768,11 @@
 
 			if (data !== null) {
 				if (vgSender.extElement.modal) {
-					vgSender.extElement.modal.hide();
+					if (typeof $ !== 'undefined') {
+						$(vgSender.extElement.modal).modal('hide');
+					} else {
+						vgSender.extElement.modal.hide();
+					}
 				}
 
 				switch (status) {
@@ -779,7 +785,12 @@
 				}
 
 				let modal = setModal(_this.classes.alert.modal);
-				if (modal) modal.show();
+
+				if (typeof $ !== 'undefined') {
+					modal.modal('show');
+				} else {
+					if (modal) modal.show();
+				}
 			}
 
 			function setAlertText (el, data, _class) {

@@ -139,10 +139,12 @@ const setModal = function (el) {
 		el = '#' + el;
 	}
 
-	if (typeof bootstrap !== "undefined") {
-		return new bootstrap.Modal(el, {});
+	if (typeof $ !== 'undefined') {
+		return $(el);
 	} else if (typeof Modal !== "undefined") {
 		return new Modal(el, {});
+	} else if (typeof bootstrap !== "undefined") {
+		return new bootstrap.Modal(el, {});
 	} else {
 		console.error('The Modal component was not found')
 

@@ -234,7 +234,11 @@ class VGFormSender extends VGSender {
 
 		if (data !== null) {
 			if (vgSender.extElement.modal) {
-				vgSender.extElement.modal.hide();
+				if (typeof $ !== 'undefined') {
+					$(vgSender.extElement.modal).modal('hide');
+				} else {
+					vgSender.extElement.modal.hide();
+				}
 			}
 
 			switch (status) {
@@ -247,7 +251,12 @@ class VGFormSender extends VGSender {
 			}
 
 			let modal = setModal(_this.classes.alert.modal);
-			if (modal) modal.show();
+
+			if (typeof $ !== 'undefined') {
+				modal.modal('show');
+			} else {
+				if (modal) modal.show();
+			}
 		}
 
 		function setAlertText (el, data, _class) {
