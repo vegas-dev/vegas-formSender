@@ -662,8 +662,10 @@
 
 				if (status === 'beforeSend') {
 					btnSubmit.innerHTML = btnText.send;
+					btnSubmit.setAttribute('disabled', 'disabled');
 				} else if (status === 'default') {
 					btnSubmit.innerHTML = btnText.text;
+					btnSubmit.removeAttribute('disabled');
 				}
 			}
 		}
