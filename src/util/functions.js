@@ -127,30 +127,4 @@ const eventHandler = {
 	}
 }
 
-/**
- * Set Modal
- * @param el
- * @returns {bootstrap.Modal|Modal|boolean}
- */
-const setModal = function (el) {
-	if (!el) return false;
-
-	if (typeof el === "string") {
-		el = '#' + el;
-	}
-
-	if (typeof $ !== 'undefined') {
-		return $(el);
-	} else if (typeof Modal !== "undefined") {
-		return new Modal(el, {});
-	} else if (typeof bootstrap !== "undefined") {
-		return new bootstrap.Modal(el, {});
-	} else {
-		console.error('The Modal component was not found')
-
-		return false;
-	}
-}
-
-
-export {mergeDeepObject, collectData, setModal, ajax, eventHandler}
+export {mergeDeepObject, collectData, ajax, eventHandler}
