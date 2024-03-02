@@ -1,6 +1,5 @@
 import {ajax, eventHandler, collectData, mergeDeepObject} from "../../util/functions";
 import VGFormPlugins from "./VGFormPlugins";
-import {Modal} from "../../bootstrap/bootstrap.esm.min";
 
 const EVENT_KEY_SUCCESS = 'vg.fs.success';
 const EVENT_KEY_ERROR   = 'vg.fs.error';
@@ -108,8 +107,10 @@ class VGSender {
 			_this.form.classList.add('needs-validation');
 		}
 
-		let modalParent = _this.form.closest('.modal');
-		if (modalParent) _this.extElement.modal = new Modal(modalParent, {backdrop: true, keyboard: true, focus: true});
+		if ('modal' in _this.settings) {
+			let modalParent = _this.form.closest('.modal');
+			if (modalParent) _this.extElement.modal = new _this.settings.modal(modalParent, {backdrop: true, keyboard: true, focus: true});
+		}
 
 		let btnSubmit = _this.form.querySelector('[type="submit"]');
 		if (!btnSubmit) btnSubmit = document.querySelector('[form="' + _this.form.id + '"]');

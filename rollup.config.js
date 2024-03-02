@@ -41,7 +41,7 @@ for (const file_name of files) {
 		],
 		plugins: [
 			commonjs(),
-			//eslint(),
+			eslint(),
 		],
 	});
 
@@ -66,7 +66,7 @@ for (const file_name of files) {
 			}),
 			resolve(),
 			commonjs(),
-			//eslint(),
+			eslint(),
 			replace({ __VERSION__: pkg.version, preventAssignment: true }),
 			terser(),
 			banner(`@vegas-${file_name} v${pkg.version}`),
