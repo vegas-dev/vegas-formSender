@@ -5,7 +5,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Vegas Form Sender</title>
+
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 	<link href="/assets/demo/css/style.css" rel="stylesheet">
 	<link href="/assets/build/vgformsender.css" rel="stylesheet">
 </head>
@@ -122,17 +125,61 @@
 	</main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="/assets/demo/js/script.js"></script>
 <script src="/assets/build/vgformsender.js"></script>
 <script>
 	document.querySelectorAll('[data-vgformsender]').forEach(function (form) {
-		new VGFormSender(form).submit();
+		new vg.VGFormSender(form).submit({
+			success: function () {
+				console.log('success')
+			}
+		});
 	});
 
 	listener('vg.fs.success', '#form-simple', (form) => {
 		console.log(form)
 	})
 </script>
+
+
+<div class="modal fade" id="modal-form">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Обычная форма в модалке</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form action="/php/server.php" method="post" id="form-in-modal" data-vgformsender>
+					<div class="row">
+						<div class="col-12">
+							<div class="form-floating mb-3">
+								<input type="password" name="user-cr-pass" class="form-control" id="user-cr-pass" placeholder="Ваш текущий пароль">
+								<label for="user-cr-pass">Ваш текущий пароль</label>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-floating mb-3">
+								<input type="password" name="user-new-pass" class="form-control" id="user-new-pass" placeholder="Придумайте новый пароль">
+								<label for="user-new-pass">Придумайте новый пароль</label>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-floating mb-3">
+								<input type="password" name="user-re-pass" class="form-control" id="user-re-pass" placeholder="Повторите новый пароль">
+								<label for="user-re-pass">Повторите новый пароль</label>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-outline-light" type="submit" form="form-in-modal"><span data-text="Вперед" data-text-send="Что там происходит...">Вперед</span></button>
+			</div>
+		</div>
+	</div>
+</div>
+
 </body>
 </html>
