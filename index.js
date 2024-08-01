@@ -1,5 +1,1 @@
-import {VGFormSender} from "./src/VGFormSender";
-
-export {
-	VGFormSender
-}
+import "./app/scss/app.scss";

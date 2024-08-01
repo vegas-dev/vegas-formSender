@@ -1,0 +1,2 @@
+var vg;(()=>{"use strict";var e={};(e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})})(e),vg=e})();
+//# sourceMappingURL=vgformsender.js.map

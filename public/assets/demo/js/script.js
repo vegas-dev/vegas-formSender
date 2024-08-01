@@ -78,3 +78,28 @@
 			})
 	})
 })()
+
+/**
+ * Listener
+ */
+window.listener = function(event, el, callback) {
+	document.addEventListener(event, function (e) {
+		let selectors = document.body.querySelectorAll(el),
+			element = e.target,
+			index = -1;
+
+		while (element && ((index = Array.prototype.indexOf.call(selectors, element)) === -1)) {
+			element = element.parentElement;
+		}
+
+		if (index > -1) {
+			(function () {
+				if (typeof callback === "function") {
+					callback(element);
+				}
+
+				e.preventDefault();
+			}).call(element, e);
+		}
+	});
+}
