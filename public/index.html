@@ -83,14 +83,16 @@
 					</div>
 
 					<div class="col-12">
-						<button type="submit" class="btn btn-primary">Сохранить</button>
+						<button type="submit" class="btn btn-primary" data-spinner="true">
+							<span data-text="Сохранить" data-text-send="Минуточку...">Сохранить</span>
+						</button>
 					</div>
 				</div>
 			</form>
 		</div>
 
 		<div class="mt-5">
-			<form action="/php/server.php" method="GET" data-validate="true" id="form-feedback" data-vgformsender>
+			<form action="/php/server.php" method="GET" data-validate="true" data-submit="false" id="form-feedback" data-vgformsender>
 				<input type="hidden" name="form" value="feedback">
 
 				<div class="row">
@@ -125,24 +127,6 @@
 	</main>
 </div>
 
-
-<script src="/assets/demo/js/script.js"></script>
-<script src="/assets/build/vgformsender.js"></script>
-<script>
-	document.querySelectorAll('[data-vgformsender]').forEach(function (form) {
-		new vg.VGFormSender(form).submit({
-			success: function () {
-				console.log('success')
-			}
-		});
-	});
-
-	listener('vg.fs.success', '#form-simple', (form) => {
-		console.log(form)
-	})
-</script>
-
-
 <div class="modal fade" id="modal-form">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -151,7 +135,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form action="/php/server.php" method="post" id="form-in-modal" data-vgformsender>
+				<form action="/php/server.php" method="post" id="form-in-modal" data-submit="false" data-vgformsender>
 					<div class="row">
 						<div class="col-12">
 							<div class="form-floating mb-3">
@@ -180,6 +164,23 @@
 		</div>
 	</div>
 </div>
+
+<script src="/assets/demo/js/script.js"></script>
+<script src="/assets/build/vgformsender.js"></script>
+<script>
+	document.querySelectorAll('[data-vgformsender]').forEach(function (form) {
+		new vg.VGFormSender(form).submit({
+			success: function () {
+				//console.log('success')
+			}
+		});
+	});
+
+	listener('vg.fs.success', '#form-simple', (form) => {
+		//console.log(form)
+	})
+</script>
+
 
 </body>
 </html>

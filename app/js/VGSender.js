@@ -12,8 +12,9 @@ const setParams = function (form, params, arg) {
 	for (let val of data) {
 		if (val.name === 'data-alert-type' && val.value) mParams.alert.params.type = val.value;
 		if (val.name === 'data-alert') mParams.alert = val.value !== 'false';
-		if (val.name === 'data-validate') mParams.validate = val.value !== 'false';
-		if (val.name === 'data-json-parse') mParams.jsonParse = val.value !== 'false';
+		if (val.name === 'data-submit') mParams.isSubmit = val.value !== 'false';
+		if (val.name === 'data-validate') mParams.isValidate = val.value !== 'false';
+		if (val.name === 'data-json-parse') mParams.isJsonParse = val.value !== 'false';
 		if (val.name === 'data-redirect' && val.value) mParams.redirect = val.value;
 		if (val.name === 'data-plugins' && val.value) mParams.plugins = dataPlugins(JSON.parse(val.value));
 	}
@@ -49,9 +50,10 @@ class VGSender {
 			action: location.href,
 			method: 'post',
 			fields: [],
-			jsonParse: true,
 			redirect: null,
-			validate: false,
+			isJsonParse: true,
+			isValidate: false,
+			isSubmit: true,
 			alert: {
 				enabled: true,
 				params: {
@@ -102,7 +104,7 @@ class VGSender {
 
 		_this.form.classList.add(_this.classes.general);
 
-		if (_this.settings.validate) {
+		if (_this.settings.isValidate) {
 			_this.form.setAttribute('novalidate', '');
 			_this.form.classList.add('needs-validation');
 		}
@@ -123,13 +125,7 @@ class VGSender {
 		const _this = this;
 
 		_this.form.onsubmit = function (event) {
-			let data = new FormData(_this.form);
-
-			if (typeof _this.settings.fields === 'object') {
-				_this.data = collectData(data, _this.settings.fields);
-			}
-
-			if (_this.settings.validate) {
+			if (_this.settings.isValidate) {
 				if (!_this.form.checkValidity()) {
 					event.preventDefault();
 					event.stopPropagation();
@@ -138,6 +134,13 @@ class VGSender {
 
 					return false;
 				}
+			}
+
+			if (!_this.settings.isSubmit) return false;
+
+			let data = new FormData(_this.form);
+			if (typeof _this.settings.fields === 'object') {
+				_this.data = collectData(data, _this.settings.fields);
 			}
 
 			return _this.request(callback, event);
