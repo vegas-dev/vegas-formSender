@@ -66,6 +66,18 @@ class VGSender {
 						enabled: true,
 						params: {}
 					}
+				},
+				{
+					divBlock: {
+						enabled: false,
+						params: {}
+					}
+				},
+				{
+					VGModal: {
+						enabled: false,
+						params: {}
+					}
 				}
 			]
 		}

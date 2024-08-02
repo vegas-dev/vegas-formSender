@@ -1,6 +1,5 @@
 import VGSender from "./VGSender";
-import {mergeDeepObject} from "./util/functions";
-import {toggleSlide} from "./util/animation";
+import VGFormPlugins from "./VGFormPlugins";
 
 const svg =  {
 	error: '<svg viewbox="0 0 500 500" class="am_Error_Icon"><path class="am_SVG_circle" d="m444.34693,114.07007a236.95276,236.95276 0 0 1 44.1553,137.73747c0,129.97005 -106.94772,236.96443 -236.91777,236.96443s-236.91777,-106.94772 -236.91777,-236.91777s106.94772,-236.96443 236.91777,-236.96443a236.99941,236.99941 0 0 1 168.72548,70.59483"></path><line class="am_SVG_error1" y2="390" x2="390" y1="110" x1="110"></line><line class="am_SVG_error2" y2="390" x2="110" y1="110" x1="390"></line></svg>',
@@ -17,6 +16,11 @@ class VGFormSender extends VGSender {
 		return this;
 	}
 
+	/**
+	 * Колбеки срабатывают до вызова внутренних действий
+	 * @param callback
+	 * @returns {boolean}
+	 */
 	submit(callback) {
 		if (!this.isAlert) {
 			return super.submit(callback);
@@ -38,19 +42,7 @@ class VGFormSender extends VGSender {
 					}
 
 					buttonCondition(vgSender);
-
-					if (_this.settings.isJsonParse && typeof data === 'string') {
-						let parserData = {};
-
-						try {
-							parserData = JSON.parse(data);
-							_this.alert(vgSender, parserData, 'error');
-						} catch (e) {
-							_this.alert(vgSender, data, 'error');
-						}
-					} else {
-						_this.alert(vgSender, data, 'error');
-					}
+					jsonParse(data, 'error', vgSender);
 				},
 				success: function (event, vgSender, data) {
 					if (callback && 'success' in callback && typeof callback.success === 'function') {
@@ -58,19 +50,7 @@ class VGFormSender extends VGSender {
 					}
 
 					buttonCondition(vgSender);
-
-					if (_this.settings.isJsonParse && typeof data === 'string') {
-						let parserData = {};
-
-						try {
-							parserData = JSON.parse(data);
-							_this.alert(vgSender, parserData, 'success');
-						} catch (e) {
-							_this.alert(vgSender, data, 'success');
-						}
-					} else {
-						_this.alert(vgSender, data, 'success');
-					}
+					jsonParse(data, 'success', vgSender);
 				}
 			});
 
@@ -120,11 +100,42 @@ class VGFormSender extends VGSender {
 					}
 				}
 			}
+
+			function jsonParse(data, status, sender) {
+				if (_this.settings.isJsonParse && typeof data === 'string') {
+					let parserData = {};
+
+					try {
+						parserData = JSON.parse(data);
+						_this.alert(sender, parserData, status);
+					} catch (e) {
+						_this.alert(sender, data, status);
+					}
+				} else {
+					_this.alert(sender, data, status);
+				}
+			}
 		}
 	}
 
 	alert(vgSender, data, status) {
-		console.log(status)
+		if (this.isAlert) {
+			let type;
+			if (this.settings.alert.params.type === 'block') type = 'divBlock';
+			if (this.settings.alert.params.type === 'modal') type = 'VGModal';
+
+			if (type) {
+				this.settings.plugins.find(p => p[type])[type].enabled = true;
+				this.settings.plugins.find(p => p[type])[type].params = {
+					data: data,
+					status: status
+				};
+			}
+		}
+
+		if ('plugins' in this.settings) {
+			new VGFormPlugins(this).init();
+		}
 	}
 }
 
