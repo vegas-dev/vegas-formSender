@@ -6,7 +6,7 @@
  * --------------------------------------------------------------------------
  */
 
-import VGFormSender from "./VGFormSender";
+import VGFormSender from "./js/VGFormSender";
 
 export {
 	VGFormSender

@@ -1,0 +1,17 @@
+@import "./scss/variables";
+@import "./scss/svg";
+
+:root {
+	--vg-fs-color-danger: #{$color-danger};
+	--vg-fs-color-danger-border: #{$color-danger-border};
+	--vg-fs-color-danger-bg: #{$color-danger-bg};
+
+	--vg-fs-color-success: #{$color-success};
+	--vg-fs-color-success-border: #{$color-success-border};
+	--vg-fs-color-success-bg: #{$color-success-bg};
+
+	--vg-fs-border-radius: #{$border-radius};
+}
+
+@import "./plugins/block/divBlock";
+@import "./plugins/modal/VGModal";

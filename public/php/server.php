@@ -25,7 +25,7 @@ if ($error) {
 	];
 } else {
 	$result = [
-		'errors' => $error,
+		'errors' => false,
 		'title' => 'Data received successfully',
 		'msg' => 'We will contact you as soon as possible'
 	];

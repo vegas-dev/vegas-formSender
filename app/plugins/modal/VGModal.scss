@@ -1,0 +1,82 @@
+.vg-form-sender--alert-modal {
+	.modal-dialog {
+		margin: 5.75rem auto;
+
+		.modal-content {
+			border-radius: 0;
+			box-shadow: none;
+			border: none;
+			position: relative;
+			padding: 45px;
+
+			.modal-close {
+				position: absolute;
+				right: -45px;
+				top: -45px;
+				opacity: .9;
+				background: transparent;
+				border: none;
+				font-size: 18px;
+				cursor: pointer;
+				transition: transform .8s ease-in-out;
+
+				svg {
+					width: 25px;
+
+					polygon {
+						fill: white !important;
+					}
+				}
+
+				&:hover {
+					transform: rotate(360deg);
+				}
+			}
+
+			.modal-footer, .modal-header {
+				border: none;
+
+				.btn {
+					line-height: 1;
+					text-transform: none;
+					font-size: 24px;
+				}
+			}
+		}
+	}
+
+	.vg-alert-content {
+		.vg-alert {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			&:not(.show) {
+				display: none;
+			}
+
+			.svg-area {
+				margin-bottom: 2rem;
+			}
+
+			.title-area {
+				font-weight: 800;
+				font-size: 24px;
+				margin-bottom: .5rem;
+			}
+
+			.text-area {
+				font-weight: 500;
+				font-size: 18px;
+			}
+
+			&-danger {
+				color: var(--vg-fs-color-danger)
+			}
+
+			&-success {
+				color: var(--vg-fs-color-success)
+			}
+		}
+	}
+}

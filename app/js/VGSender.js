@@ -1,4 +1,4 @@
-import {ajax, eventHandler, collectData, mergeDeepObject} from "./util/functions";
+import {ajax, eventHandler, collectData, mergeDeepObject} from "../util/functions";
 import VGFormPlugins from "./VGFormPlugins";
 
 const EVENT_KEY_SUCCESS = 'vg.fs.success';

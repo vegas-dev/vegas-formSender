@@ -1,6 +1,6 @@
-import showPass from "./plugins/showPass/showPass";
-import divBlock from "./plugins/block/divBlock";
-import VGModal  from "./plugins/modal/VGModal";
+import showPass from "../plugins/showPass/showPass";
+import divBlock from "../plugins/block/divBlock";
+import VGModal  from "../plugins/modal/VGModal";
 
 class VGFormPlugins {
 	constructor(formsender) {
