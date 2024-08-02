@@ -1,82 +1,37 @@
 .vg-form-sender--alert-modal {
-	.modal-dialog {
-		margin: 5.75rem auto;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 999;
+	display: none;
+	width: 100%;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	outline: 0;
 
-		.modal-content {
-			border-radius: 0;
-			box-shadow: none;
-			border: none;
-			position: relative;
-			padding: 45px;
-
-			.modal-close {
-				position: absolute;
-				right: -45px;
-				top: -45px;
-				opacity: .9;
-				background: transparent;
-				border: none;
-				font-size: 18px;
-				cursor: pointer;
-				transition: transform .8s ease-in-out;
-
-				svg {
-					width: 25px;
-
-					polygon {
-						fill: white !important;
-					}
-				}
-
-				&:hover {
-					transform: rotate(360deg);
-				}
-			}
-
-			.modal-footer, .modal-header {
-				border: none;
-
-				.btn {
-					line-height: 1;
-					text-transform: none;
-					font-size: 24px;
-				}
-			}
-		}
+	&:not(.active) {
+		opacity: 0;
 	}
 
-	.vg-alert-content {
-		.vg-alert {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
+	.modal-content {
+		transition: transform .3s ease-out;
+		transform: translate(0, -50px);
+	}
+}
 
-			&:not(.show) {
-				display: none;
-			}
+.vg-form-sender--alert-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 998;
+	width: 100vw;
+	height: 100vh;
+	background-color: #000;
+	opacity: 0;
+	transition: opacity .15s linear;
 
-			.svg-area {
-				margin-bottom: 2rem;
-			}
-
-			.title-area {
-				font-weight: 800;
-				font-size: 24px;
-				margin-bottom: .5rem;
-			}
-
-			.text-area {
-				font-weight: 500;
-				font-size: 18px;
-			}
-
-			&-danger {
-				color: var(--vg-fs-color-danger)
-			}
-
-			&-success {
-				color: var(--vg-fs-color-success)
-			}
-		}
+	&.active {
+		opacity: .5;
 	}
 }

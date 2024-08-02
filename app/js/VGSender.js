@@ -4,6 +4,7 @@ import VGFormPlugins from "./VGFormPlugins";
 const EVENT_KEY_SUCCESS = 'vg.fs.success';
 const EVENT_KEY_ERROR   = 'vg.fs.error';
 const EVENT_KEY_BEFORE  = 'vg.fs.before';
+const EVENT_KEY_ANYWAY  = 'vg.fs.anyway';
 
 const setParams = function (form, params, arg) {
 	let mParams = mergeDeepObject(params, arg);
@@ -11,7 +12,7 @@ const setParams = function (form, params, arg) {
 
 	for (let val of data) {
 		if (val.name === 'data-alert-type' && val.value) mParams.alert.params.type = val.value;
-		if (val.name === 'data-alert') mParams.alert = val.value !== 'false';
+		if (val.name === 'data-alert') mParams.alert.enabled = val.value !== 'false';
 		if (val.name === 'data-submit') mParams.isSubmit = val.value !== 'false';
 		if (val.name === 'data-validate') mParams.isValidate = val.value !== 'false';
 		if (val.name === 'data-json-parse') mParams.isJsonParse = val.value !== 'false';
@@ -194,12 +195,15 @@ class VGSender {
 				}
 
 				eventHandler.on(_this.form, EVENT_KEY_ERROR);
-			} else {
+			} else if (typeof status === 'string' && status === 'success') {
 				if (callback && 'success' in callback) {
 					if (typeof callback.success === 'function') callback.success(event, _this, data);
 				}
 
 				eventHandler.on(_this.form, EVENT_KEY_SUCCESS);
+			} else {
+				if (typeof callback.anyway === 'function') callback.anyway(event, _this, data);
+				eventHandler.on(_this.form, EVENT_KEY_ANYWAY);
 			}
 
 			redirect();

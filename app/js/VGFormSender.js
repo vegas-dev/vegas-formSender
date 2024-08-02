@@ -45,6 +45,14 @@ class VGFormSender extends VGSender {
 
 					buttonCondition(vgSender);
 					jsonParse(data, 'success', vgSender);
+				},
+				anyway: function (event, vgSender, data) {
+					if (callback && 'anyway' in callback && typeof callback.anyway === 'function') {
+						callback.anyway(event, vgSender, data);
+					}
+
+					buttonCondition(vgSender);
+					jsonParse(data, 'anyway', vgSender);
 				}
 			});
 
@@ -113,18 +121,18 @@ class VGFormSender extends VGSender {
 	}
 
 	alert(vgSender, data, status) {
-		if (this.isAlert) {
-			let type;
-			if (this.settings.alert.params.type === 'block') type = 'divBlock';
-			if (this.settings.alert.params.type === 'modal') type = 'VGModal';
+		if (!this.isAlert) return false;
 
-			if (type) {
-				this.settings.plugins.find(p => p[type])[type].enabled = true;
-				this.settings.plugins.find(p => p[type])[type].params = {
-					data: data,
-					status: status
-				};
-			}
+		let type;
+		if (this.settings.alert.params.type === 'block') type = 'divBlock';
+		if (this.settings.alert.params.type === 'modal') type = 'VGModal';
+
+		if (type) {
+			this.settings.plugins.find(p => p[type])[type].enabled = true;
+			this.settings.plugins.find(p => p[type])[type].params = {
+				data: data,
+				status: status
+			};
 		}
 
 		if ('plugins' in this.settings) {
