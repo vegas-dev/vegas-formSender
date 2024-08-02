@@ -18,7 +18,6 @@ class divBlock {
 		if (_this.params.status === 'beforeSend') {
 			if (el.classList.contains('active')) {
 				_this.toggleSlide(el);
-
 				el.classList.remove('active');
 			}
 		} else {
