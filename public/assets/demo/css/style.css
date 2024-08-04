@@ -1,3 +1,7 @@
+:root {
+	--vg-fs-modal-bg: var(--bs-body-bg) !important;
+}
+
 .form-floating [data-vg-toggle="show-pass"] {
 	position: absolute;
 	right: 12px;

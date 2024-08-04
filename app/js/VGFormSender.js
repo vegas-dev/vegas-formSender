@@ -65,7 +65,7 @@ class VGFormSender extends VGSender {
 					};
 
 					if (btnSubmit.hasAttribute('data-spinner') && status === 'beforeSend') {
-						btnSubmit.insertAdjacentHTML('afterbegin', '<span class="spinner-border spinner-border-sm"></span>')
+						btnSubmit.insertAdjacentHTML('afterbegin', '<span class="spinner-border spinner-border-sm me-2"></span>')
 					}
 
 					if (btnSubmit.hasAttribute('data-text')) {
@@ -123,20 +123,22 @@ class VGFormSender extends VGSender {
 	alert(vgSender, data, status) {
 		if (!this.isAlert) return false;
 
-		let type;
-		if (this.settings.alert.params.type === 'block') type = 'divBlock';
-		if (this.settings.alert.params.type === 'modal') type = 'VGModal';
+		if (status === 'error' || status === 'success' || status === 'anyway') {
+			let type;
+			if (this.settings.alert.params.type === 'block') type = 'divBlock';
+			if (this.settings.alert.params.type === 'modal') type = 'VGModal';
 
-		if (type) {
-			this.settings.plugins.find(p => p[type])[type].enabled = true;
-			this.settings.plugins.find(p => p[type])[type].params = {
-				data: data,
-				status: status
-			};
-		}
+			if (type) {
+				this.settings.plugins.find(p => p[type])[type].enabled = true;
+				this.settings.plugins.find(p => p[type])[type].params = {
+					data: data,
+					status: status
+				};
+			}
 
-		if ('plugins' in this.settings) {
-			new VGFormPlugins(this).init();
+			if ('plugins' in this.settings) {
+				new VGFormPlugins(this).init();
+			}
 		}
 	}
 }

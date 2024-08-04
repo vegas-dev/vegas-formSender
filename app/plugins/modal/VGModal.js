@@ -25,10 +25,12 @@ class VGModal {
 	}
 
 	toggle() {
+		const _this = this;
+
 		if (!document.body.classList.contains('vg-modal-open')) {
-			return this.show();
+			return _this.show();
 		} else {
-			return this.hide();
+			return _this.hide();
 		}
 	}
 
@@ -45,6 +47,27 @@ class VGModal {
 
 		document.body.append(_this.element);
 		document.body.append(_this.backdrop);
+		_this.setText(_this.element);
+
+		window.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' || event.key === 'Esc') {
+				_this.hide();
+			}
+		});
+
+		_this.element.onclick = function (e) {
+			if (e.target === document.querySelector('.' + _this.classes.container)) {
+				_this.hide();
+			}
+
+			return false;
+		}
+
+		document.body.querySelector('[data-vg-dismiss="modal"]').onclick = function () {
+			_this.hide();
+
+			return false;
+		}
 	}
 
 	hide() {
@@ -58,7 +81,7 @@ class VGModal {
 			_this.element.style.display = '';
 			_this.backdrop.remove();
 			_this.element.remove();
-		}, 100);
+		}, 300);
 	}
 
 	draw() {
@@ -66,29 +89,54 @@ class VGModal {
 
 		let modal = document.createElement('div');
 		modal.classList.add(_this.classes.container);
-		modal.innerHTML = '<div class="modal-content"></div>';
+		modal.innerHTML = '<div class="modal-content">' +
+			'   <div class="close"><a href="#" data-vg-dismiss="modal">' + getSvg('cross') + '</a></div>' +
+			'   <div class="modal-body vg-alert-content">' +
+			'       <div class="vg-alert vg-alert-danger">' +
+			'	        <div class="svg-area">' + getSvg('error') + '</div>' +
+			'	        <div class="content-area">' +
+			'		     <div class="title-area" data-alert-danger-title></div>' +
+			'		     <div class="text-area" data-alert-danger-text></div>' +
+			'	        </div>' +
+			'       </div>' +
+			'       <div class="vg-alert vg-alert-success">' +
+			'	        <div class="svg-area">' + getSvg('success') + '</div>' +
+			'	        <div class="content-area">' +
+			'		        <div class="title-area" data-alert-success-title></div>' +
+			'		        <div class="text-area" data-alert-success-text></div>' +
+			'	        </div>' +
+			'   </div>' +
+			'</div>';
 
 		return modal;
+	}
+
+	setText(el) {
+		const _this = this;
+		let data = _this.params.data,
+			_class = _this.params.status;
+
+		if (('errors' in data && data.errors) || ('error' in data && data.error)) _class = 'danger';
+
+		let $alert = el.querySelector('.vg-alert-' + _class);
+		if ($alert) {
+			let $text = $alert.querySelector('[data-alert-'+ _class +'-text]');
+			if ($text) {
+				if (typeof data === 'string') {
+					$text.innerHTML = data;
+				} else if (('msg' in data)) {
+					$text.innerHTML = data.msg;
+
+					let $title = $alert.querySelector('[data-alert-'+ _class +'-title]');
+					if ($title && ('title' in data)) $title.innerHTML = data.title;
+				}
+			}
+
+			$alert.classList.add('show');
+		} else {
+			el.innerHTML = data.msg
+		}
 	}
 }
 
 export default VGModal;
-
-/*
-'   <div class="modal-content-body">' +
-'       <div class="close"><a href="#" data-dismiss="alert-modal">' + getSvg('cross') + '</a></div>' +
-'       <div class="vg-alert vg-alert-danger">' +
-'	    <div class="svg-area">' + getSvg('error') + '</div>' +
-'	    <div class="content-area">' +
-'		    <div class="title-area" data-alert-danger-title></div>' +
-'		    <div class="text-area" data-alert-danger-text></div>' +
-'	    </div>' +
-'   </div>' +
-'   <div class="vg-alert vg-alert-success">' +
-'	    <div class="svg-area">' + getSvg('success') + '</div>' +
-'	    <div class="content-area">' +
-'		    <div class="title-area" data-alert-success-title></div>' +
-'		    <div class="text-area" data-alert-success-text></div>' +
-'	    </div>' +
-'   </div>' +
-'   </div>' +*/

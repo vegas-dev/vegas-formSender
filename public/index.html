@@ -135,7 +135,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form action="/php/server.php" method="post" id="form-in-modal" data-submit="false" data-vgformsender>
+				<form action="/php/server.php" method="post" id="form-in-modal" data-vgformsender>
 					<div class="row">
 						<div class="col-12">
 							<div class="form-floating mb-3">
@@ -159,7 +159,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-outline-light" type="submit" form="form-in-modal"><span data-text="Вперед" data-text-send="Что там происходит...">Вперед</span></button>
+				<button class="btn btn-outline-light" type="submit" data-spinner="true" form="form-in-modal"><span data-text="Вперед" data-text-send="Что там происходит...">Вперед</span></button>
 			</div>
 		</div>
 	</div>
@@ -170,8 +170,12 @@
 <script>
 	document.querySelectorAll('[data-vgformsender]').forEach(function (form) {
 		new vg.VGFormSender(form).submit({
-			success: function () {
-				//console.log('success')
+			anyway: function () {
+				let bsModalShow = document.querySelector('.modal.show');
+				if (bsModalShow) {
+					let bsModal = bootstrap.Modal.getInstance(bsModalShow);
+					bsModal.hide();
+				}
 			}
 		});
 	});

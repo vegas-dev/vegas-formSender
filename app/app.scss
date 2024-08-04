@@ -10,7 +10,10 @@
 	--vg-fs-color-success-border: #{$color-success-border};
 	--vg-fs-color-success-bg: #{$color-success-bg};
 
-	--vg-fs-border-radius: #{$border-radius};
+	--vg-fs-block-border-radius: .5rem;
+
+	--vg-fs-modal-bg: white;
+	--vg-fs-modal-border-radius: .5rem;
 }
 
 @import "./plugins/block/divBlock";

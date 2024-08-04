@@ -201,10 +201,10 @@ class VGSender {
 				}
 
 				eventHandler.on(_this.form, EVENT_KEY_SUCCESS);
-			} else {
-				if (typeof callback.anyway === 'function') callback.anyway(event, _this, data);
-				eventHandler.on(_this.form, EVENT_KEY_ANYWAY);
 			}
+
+			if (typeof callback.anyway === 'function') callback.anyway(event, _this, data);
+			eventHandler.on(_this.form, EVENT_KEY_ANYWAY);
 
 			redirect();
 		}
