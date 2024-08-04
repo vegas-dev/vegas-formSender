@@ -1,6 +1,6 @@
 {
 	"name": "vgformsender",
-	"version": "3.2.3",
+	"version": "3.2.4",
 	"description": "Sending data from the form",
 	"author": {
 		"name": "Vegas Studio",
@@ -25,7 +25,8 @@
 	},
 	"scripts": {
 		"dev": "webpack --mode=development",
-		"prod": "webpack --mode=production"
+		"prod": "webpack --mode=production",
+		"publish": "webpack --mode=production && npm publish --access=public"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.25.2",

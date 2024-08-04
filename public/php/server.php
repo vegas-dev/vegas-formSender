@@ -11,18 +11,7 @@ sleep(2);
 $error = false;
 
 if ($error) {
-	$sapi_type = php_sapi_name();
-	if (substr($sapi_type, 0, 3) == 'cgi') {
-		header("Status: 404 Not Found");
-	} else {
-		header("HTTP/1.1 404 Not Found");
-	}
-
-	$result = [
-		'errors' => $error,
-		'title' => 'Oops! The error came out',
-		'msg' => 'Something went wrong, try it, in 100 years'
-	];
+	header($_SERVER['SERVER_PROTOCOL'] . '500 Внутренняя ошибка сервера', true, 500);
 } else {
 	$result = [
 		'errors' => false,

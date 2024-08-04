@@ -4,7 +4,6 @@ import VGFormPlugins from "./VGFormPlugins";
 const EVENT_KEY_SUCCESS = 'vg.fs.success';
 const EVENT_KEY_ERROR   = 'vg.fs.error';
 const EVENT_KEY_BEFORE  = 'vg.fs.before';
-const EVENT_KEY_ANYWAY  = 'vg.fs.anyway';
 
 const setParams = function (form, params, arg) {
 	let mParams = mergeDeepObject(params, arg);
@@ -202,9 +201,6 @@ class VGSender {
 
 				eventHandler.on(_this.form, EVENT_KEY_SUCCESS);
 			}
-
-			if (typeof callback.anyway === 'function') callback.anyway(event, _this, data);
-			eventHandler.on(_this.form, EVENT_KEY_ANYWAY);
 
 			redirect();
 		}

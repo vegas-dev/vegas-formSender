@@ -1,4 +1,5 @@
 import {getSvg} from "../../util/svg";
+import {isObject} from "../../util/functions";
 
 class VGModal {
 	constructor(form, arg) {
@@ -14,6 +15,8 @@ class VGModal {
 
 	init() {
 		const _this = this;
+
+		if (_this.params.status === 'beforeSend') return false;
 
 		_this.element = _this.form.querySelector('.' + _this.classes.container);
 		if (!_this.element) _this.element = _this.draw();
@@ -63,10 +66,13 @@ class VGModal {
 			return false;
 		}
 
-		document.body.querySelector('[data-vg-dismiss="modal"]').onclick = function () {
-			_this.hide();
+		let btnClose = _this.element.querySelector('[data-vg-dismiss="modal"]');
+		if (btnClose) {
+			btnClose.onclick = function () {
+				_this.hide();
 
-			return false;
+				return false;
+			}
 		}
 	}
 
@@ -114,9 +120,13 @@ class VGModal {
 	setText(el) {
 		const _this = this;
 		let data = _this.params.data,
-			_class = _this.params.status;
+			_class = _this.params.status === 'error' ? 'danger' : _this.params.status;
 
-		if (('errors' in data && data.errors) || ('error' in data && data.error)) _class = 'danger';
+		if (!data) return false;
+
+		if (isObject(data)) {
+			if (('errors' in data && data.errors) || ('error' in data && data.error)) _class = 'danger';
+		}
 
 		let $alert = el.querySelector('.vg-alert-' + _class);
 		if ($alert) {

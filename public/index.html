@@ -170,14 +170,21 @@
 <script>
 	document.querySelectorAll('[data-vgformsender]').forEach(function (form) {
 		new vg.VGFormSender(form).submit({
-			anyway: function () {
-				let bsModalShow = document.querySelector('.modal.show');
-				if (bsModalShow) {
-					let bsModal = bootstrap.Modal.getInstance(bsModalShow);
-					bsModal.hide();
-				}
+			success: function () {
+				hideBSModal();
+			},
+			error: function () {
+				hideBSModal();
 			}
 		});
+
+		function hideBSModal() {
+			let bsModalShow = document.querySelector('.modal.show');
+			if (bsModalShow) {
+				let bsModal = bootstrap.Modal.getInstance(bsModalShow);
+				bsModal.hide();
+			}
+		}
 	});
 
 	listener('vg.fs.success', '#form-simple', (form) => {

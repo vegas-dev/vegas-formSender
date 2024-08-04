@@ -1,5 +1,6 @@
 import VGSender from "./VGSender";
 import VGFormPlugins from "./VGFormPlugins";
+import {isObject} from "../util/functions";
 
 class VGFormSender extends VGSender {
 	constructor(form, arg ={}) {
@@ -45,14 +46,6 @@ class VGFormSender extends VGSender {
 
 					buttonCondition(vgSender);
 					jsonParse(data, 'success', vgSender);
-				},
-				anyway: function (event, vgSender, data) {
-					if (callback && 'anyway' in callback && typeof callback.anyway === 'function') {
-						callback.anyway(event, vgSender, data);
-					}
-
-					buttonCondition(vgSender);
-					jsonParse(data, 'anyway', vgSender);
 				}
 			});
 
@@ -123,22 +116,20 @@ class VGFormSender extends VGSender {
 	alert(vgSender, data, status) {
 		if (!this.isAlert) return false;
 
-		if (status === 'error' || status === 'success' || status === 'anyway') {
-			let type;
-			if (this.settings.alert.params.type === 'block') type = 'divBlock';
-			if (this.settings.alert.params.type === 'modal') type = 'VGModal';
+		let type;
+		if (this.settings.alert.params.type === 'block') type = 'divBlock';
+		if (this.settings.alert.params.type === 'modal') type = 'VGModal';
 
-			if (type) {
-				this.settings.plugins.find(p => p[type])[type].enabled = true;
-				this.settings.plugins.find(p => p[type])[type].params = {
-					data: data,
-					status: status
-				};
-			}
+		if (type) {
+			this.settings.plugins.find(p => p[type])[type].enabled = true;
+			this.settings.plugins.find(p => p[type])[type].params = {
+				data: data,
+				status: status
+			};
+		}
 
-			if ('plugins' in this.settings) {
-				new VGFormPlugins(this).init();
-			}
+		if ('plugins' in this.settings) {
+			new VGFormPlugins(this).init();
 		}
 	}
 }

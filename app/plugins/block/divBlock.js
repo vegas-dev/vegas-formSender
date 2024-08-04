@@ -1,4 +1,5 @@
 import {getSvg} from "../../util/svg";
+import {isObject} from "../../util/functions";
 
 class divBlock {
 	constructor(form, arg) {
@@ -19,6 +20,8 @@ class divBlock {
 			if (el.classList.contains('active')) {
 				_this.toggleSlide(el);
 				el.classList.remove('active');
+
+				setTimeout(() => el.remove(), 500);
 			}
 		} else {
 			_this.setActive(el);
@@ -41,9 +44,13 @@ class divBlock {
 	setText(el) {
 		const _this = this;
 		let data = _this.params.data,
-			_class = _this.params.status;
+			_class = _this.params.status === 'error' ? 'danger' : _this.params.status;
 
-		if (('errors' in data && data.errors) || ('error' in data && data.error)) _class = 'danger';
+		if (!data || _this.params.status === 'beforeSend') return false;
+
+		if (isObject(data)) {
+			if (('errors' in data && data.errors) || ('error' in data && data.error)) _class = 'danger';
+		}
 
 		let $alert = el.querySelector('.vg-alert-' + _class);
 		if ($alert) {
@@ -88,7 +95,6 @@ class divBlock {
 
 		let elBlock = document.createElement('div');
 		elBlock.classList.add(_this.classes.container);
-
 		elBlock.innerHTML = '<div class="close"><a href="#" data-dismiss="alert-block">' + getSvg('cross') + '</a></div>' +
 			'<div class="vg-alert vg-alert-danger">' +
 			'	<div class="svg-area">' + getSvg('error') + '</div>' +

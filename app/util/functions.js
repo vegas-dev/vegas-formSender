@@ -73,6 +73,7 @@ const ajax = {
 				break;
 			} catch (e) {}
 		}
+
 		return xhr;
 	},
 
@@ -89,14 +90,11 @@ const ajax = {
 						callback('success', x.responseText)
 						break;
 					default:
-						callback('error', x.responseText)
+						callback('error', x.statusText)
 						break;
 				}
 			}
 		};
-		if (method === 'POST') {
-			//x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		}
 		x.send(data)
 	},
 
@@ -127,4 +125,9 @@ const eventHandler = {
 	}
 }
 
-export {mergeDeepObject, collectData, ajax, eventHandler}
+/**
+ *
+ */
+const isObject = obj => obj && typeof obj === 'object';
+
+export {isObject, mergeDeepObject, collectData, ajax, eventHandler}
