@@ -1,10 +1,12 @@
 import {getSvg} from "../../util/svg";
-import {isObject} from "../../util/functions";
+import {isObject, mergeDeepObject} from "../../util/functions";
 
 class VGModal {
 	constructor(form, arg) {
 		this.form = form;
-		this.params = arg;
+		this.params = mergeDeepObject({
+			content_over: true,
+		}, arg);
 		this.classes = {
 			container: 'vg-form-sender--alert-modal',
 			backdrop:  'vg-form-sender--alert-backdrop'
@@ -42,6 +44,11 @@ class VGModal {
 
 		document.body.classList.add('vg-modal-open');
 		_this.element.style.display = 'block';
+
+		if (_this.params.content_over) {
+			document.body.style.paddingRight = (window.innerWidth - document.documentElement.clientWidth) + 'px';
+			document.body.style.overflow = "hidden";
+		}
 
 		setTimeout(() => {
 			_this.element.classList.add('active');
@@ -87,6 +94,11 @@ class VGModal {
 			_this.element.style.display = '';
 			_this.backdrop.remove();
 			_this.element.remove();
+
+			if (_this.params.content_over) {
+				document.body.style.paddingRight = "";
+				document.body.style.overflow = "";
+			}
 		}, 300);
 	}
 
