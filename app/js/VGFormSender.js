@@ -116,21 +116,23 @@ class VGFormSender extends VGSender {
 	alert(vgSender, data, status) {
 		if (!this.isAlert) return false;
 
-		let type;
-		if (this.settings.alert.params.type === 'block') type = 'divBlock';
-		if (this.settings.alert.params.type === 'modal') type = 'VGModal';
+		setTimeout(() => {
+			let type;
+			if (this.settings.alert.params.type === 'block') type = 'divBlock';
+			if (this.settings.alert.params.type === 'modal') type = 'VGModal';
 
-		if (type) {
-			this.settings.plugins.find(p => p[type])[type].enabled = true;
-			this.settings.plugins.find(p => p[type])[type].params = {
-				data: data,
-				status: status
-			};
-		}
+			if (type) {
+				this.settings.plugins.find(p => p[type])[type].enabled = true;
+				this.settings.plugins.find(p => p[type])[type].params = {
+					data: data,
+					status: status
+				};
+			}
 
-		if ('plugins' in this.settings) {
-			new VGFormPlugins(this).init();
-		}
+			if ('plugins' in this.settings) {
+				new VGFormPlugins(this).init();
+			}
+		}, 315)
 	}
 }
 
