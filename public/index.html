@@ -115,7 +115,7 @@
 					</div>
 
 					<div class="col-12">
-						<button type="submit" class="btn btn-primary"><span data-text-send="Отправляем..." data-text="Отправить">Отправить</span></button>
+						<button type="submit" class="btn btn-primary"><span>Заказать</span></button>
 					</div>
 				</div>
 			</form>
@@ -169,7 +169,7 @@
 <script src="/assets/build/vgformsender.js"></script>
 <script>
 	document.querySelectorAll('[data-vgformsender]').forEach(function (form) {
-		new vg.VGFormSender(form).submit({
+		new vg.VGFormSender(form, {}).submit({
 			success: function () {
 				hideBSModal();
 			},

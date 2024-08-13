@@ -6,6 +6,8 @@ class VGModal {
 		this.form = form;
 		this.params = mergeDeepObject({
 			content_over: true,
+			hideDelay: 100,
+			showDelay: 50
 		}, arg);
 		this.classes = {
 			container: 'vg-form-sender--alert-modal',
@@ -53,7 +55,7 @@ class VGModal {
 		setTimeout(() => {
 			_this.element.classList.add('active');
 			_this.backdrop.classList.add('active');
-		}, 100);
+		}, _this.params.showDelay);
 
 		document.body.append(_this.element);
 		document.body.append(_this.backdrop);
@@ -99,7 +101,7 @@ class VGModal {
 				document.body.style.paddingRight = "";
 				document.body.style.overflow = "";
 			}
-		}, 300);
+		}, _this.params.hideDelay);
 	}
 
 	draw() {

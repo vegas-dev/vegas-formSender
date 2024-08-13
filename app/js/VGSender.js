@@ -6,6 +6,22 @@ const EVENT_KEY_ERROR   = 'vg.fs.error';
 const EVENT_KEY_BEFORE  = 'vg.fs.before';
 
 const setParams = function (form, params, arg) {
+	if ('plugins' in arg && arg.plugins.length) {
+		arg.plugins.forEach(function (plugin, n) {
+			for (const pluginElement in plugin) {
+				params.plugins.forEach((p, i) => {
+					for (const pElm in p) {
+						if (pElm === pluginElement) {
+							params.plugins[i] = mergeDeepObject(params.plugins[i], arg.plugins[n])
+						}
+					}
+				});
+			}
+		});
+
+		delete arg.plugins;
+	}
+
 	let mParams = mergeDeepObject(params, arg);
 	let data = [].filter.call(form.attributes, function(at) { return /^data-/.test(at.name); });
 
@@ -56,6 +72,7 @@ class VGSender {
 			isSubmit: true,
 			alert: {
 				enabled: true,
+				delay: 100,
 				params: {
 					type: 'modal'
 				},

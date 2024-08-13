@@ -8,13 +8,13 @@ error_reporting(E_ALL);
 
 sleep(2);
 
-$error = false;
+$error = true;
 
 if ($error) {
 	header($_SERVER['SERVER_PROTOCOL'] . '500 Внутренняя ошибка сервера', true, 500);
 } else {
 	$result = [
-		'errors' => false,
+		'errors' => true,
 		'title' => 'Data received successfully',
 		'msg' => 'We will contact you as soon as possible'
 	];

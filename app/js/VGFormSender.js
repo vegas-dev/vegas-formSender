@@ -1,6 +1,6 @@
 import VGSender from "./VGSender";
 import VGFormPlugins from "./VGFormPlugins";
-import {isObject} from "../util/functions";
+import {mergeDeepObject} from "../util/functions";
 
 class VGFormSender extends VGSender {
 	constructor(form, arg ={}) {
@@ -116,6 +116,8 @@ class VGFormSender extends VGSender {
 	alert(vgSender, data, status) {
 		if (!this.isAlert) return false;
 
+		console.log(this.settings.alert.delay)
+
 		setTimeout(() => {
 			let type;
 			if (this.settings.alert.params.type === 'block') type = 'divBlock';
@@ -123,16 +125,14 @@ class VGFormSender extends VGSender {
 
 			if (type) {
 				this.settings.plugins.find(p => p[type])[type].enabled = true;
-				this.settings.plugins.find(p => p[type])[type].params = {
-					data: data,
-					status: status
-				};
+				this.settings.plugins.find(p => p[type])[type].params.data = data;
+				this.settings.plugins.find(p => p[type])[type].params.status = status;
 			}
 
 			if ('plugins' in this.settings) {
 				new VGFormPlugins(this).init();
 			}
-		}, 315)
+		}, this.settings.alert.delay)
 	}
 }
 
