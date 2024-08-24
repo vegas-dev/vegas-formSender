@@ -116,8 +116,6 @@ class VGFormSender extends VGSender {
 	alert(vgSender, data, status) {
 		if (!this.isAlert) return false;
 
-		console.log(this.settings.alert.delay)
-
 		setTimeout(() => {
 			let type;
 			if (this.settings.alert.params.type === 'block') type = 'divBlock';

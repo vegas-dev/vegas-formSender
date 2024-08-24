@@ -169,7 +169,17 @@
 <script src="/assets/build/vgformsender.js"></script>
 <script>
 	document.querySelectorAll('[data-vgformsender]').forEach(function (form) {
-		new vg.VGFormSender(form, {}).submit({
+		new vg.VGFormSender(form, {
+			plugins: [
+				{
+					VGModal: {
+						params: {
+							hideDelay: 350
+						}
+					}
+				}
+			]
+		}).submit({
 			success: function () {
 				hideBSModal();
 			},
