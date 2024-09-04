@@ -6,7 +6,7 @@ class VGModal {
 		this.form = form;
 		this.params = mergeDeepObject({
 			content_over: true,
-			hideDelay: 100,
+			hideDelay: 350,
 			showDelay: 50
 		}, arg);
 		this.classes = {

@@ -72,7 +72,7 @@ class VGSender {
 			isSubmit: true,
 			alert: {
 				enabled: true,
-				delay: 100,
+				delay: 350,
 				params: {
 					type: 'modal'
 				},
