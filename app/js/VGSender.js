@@ -29,6 +29,7 @@ const setParams = function (form, params, arg) {
 		if (val.name === 'data-alert-type' && val.value) mParams.alert.params.type = val.value;
 		if (val.name === 'data-alert') mParams.alert.enabled = val.value !== 'false';
 		if (val.name === 'data-submit') mParams.isSubmit = val.value !== 'false';
+		if (val.name === 'data-show-text') mParams.isBtnText = val.value !== 'false';
 		if (val.name === 'data-validate') mParams.isValidate = val.value !== 'false';
 		if (val.name === 'data-json-parse') mParams.isJsonParse = val.value !== 'false';
 		if (val.name === 'data-redirect' && val.value) mParams.redirect = val.value;
@@ -70,6 +71,7 @@ class VGSender {
 			isJsonParse: true,
 			isValidate: false,
 			isSubmit: true,
+			isBtnText: true,
 			alert: {
 				enabled: true,
 				delay: 350,

@@ -51,7 +51,7 @@ class VGFormSender extends VGSender {
 
 			function buttonCondition(vgSender, status = 'default') {
 				let btnSubmit = vgSender.extElement.button;
-				if (btnSubmit) {
+				if (btnSubmit && _this.settings.isBtnText) {
 					let btnText = {
 						send: 'Отправляем...',
 						text: 'Отправить'
