@@ -143,7 +143,6 @@ class VGModal {
 		if (!data && ('response' in data) && !data.response) return false;
 
 		let response = normalizeData(data.response);
-		if(!response) return;
 
 		if (isObject(response)) {
 			if (('errors' in data && response.errors) || ('error' in response && response.error)) _class = 'danger';
@@ -151,30 +150,38 @@ class VGModal {
 
 		let $alert = el.querySelector('.vg-alert-' + _class);
 		if ($alert) {
-			let $text = $alert.querySelector('[data-alert-'+ _class +'-text]');
+			let $text = $alert.querySelector('[data-alert-'+ _class +'-text]'),
+				$title = $alert.querySelector('[data-alert-'+ _class +'-title]');
+
 			if ($text) {
-				if (typeof response === 'string') {
-					$text.innerHTML = response;
-				} else if (('message' in response) && response.message) {
-					let errors = normalizeData(response.errors) || null;
-					if (Array.isArray(errors) || isObject(errors)) {
-						if (isObject(errors)) {
-							for (const error in errors) {
-								if (Array.isArray(errors[error])) {
-									errors[error].forEach(function (txt) {
-										$text.innerHTML += '<div>'+ txt +'</div>';
-									})
-								} else {
-									$text.innerHTML = '<div>'+ errors[error] +'</div>';
+				if (!response) {
+					if (_this.params.status === 'error') {
+						$title.innerHTML = 'Ошибка';
+						$text.innerHTML = data.text;
+					}
+				} else {
+					if (typeof response === 'string') {
+						$text.innerHTML = response;
+					} else if (('message' in response) && response.message) {
+						let errors = normalizeData(response.errors) || null;
+						if (Array.isArray(errors) || isObject(errors)) {
+							if (isObject(errors)) {
+								for (const error in errors) {
+									if (Array.isArray(errors[error])) {
+										errors[error].forEach(function (txt) {
+											$text.innerHTML += '<div>'+ txt +'</div>';
+										})
+									} else {
+										$text.innerHTML = '<div>'+ errors[error] +'</div>';
+									}
 								}
 							}
+						} else {
+							$text.innerHTML = response.message;
 						}
-					} else {
-						$text.innerHTML = response.message;
-					}
 
-					let $title = $alert.querySelector('[data-alert-'+ _class +'-title]');
-					if ($title && ('title' in response)) $title.innerHTML = response.title;
+						if ($title && ('title' in response)) $title.innerHTML = response.title;
+					}
 				}
 			}
 
