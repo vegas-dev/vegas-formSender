@@ -9,15 +9,27 @@ error_reporting(E_ALL);
 sleep(2);
 
 $error = true;
+$result = [];
 
 if ($error) {
 	header($_SERVER['SERVER_PROTOCOL'] . '500 Внутренняя ошибка сервера', true, 500);
+
+	$result = [
+		'errors' => [
+			'child_history' => ['Пожалуйста, загрузите файл с историей ребенка'],
+			'child_photos' => ['Пожалуйста, прикрепите фотографии ребенка.']
+		],
+		'title' => '',
+		'message' => 'The given data was invalid'
+	];
+
+	echo json_encode($result);
 } else {
 	$result = [
-		'errors' => true,
+		'errors' => false,
 		'title' => 'Data received successfully',
-		'msg' => 'We will contact you as soon as possible'
+		'message' => 'We will contact you as soon as possible'
 	];
-}
 
-echo json_encode($result);
+	echo json_encode($result);
+}

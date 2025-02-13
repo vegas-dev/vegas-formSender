@@ -1,5 +1,7 @@
 import {getSvg} from "../../util/svg";
-import {isObject, mergeDeepObject} from "../../util/functions";
+import {eventHandler, isObject, mergeDeepObject, normalizeData} from "../../util/functions";
+
+const EVENT_KEY_MODAL_OPEN  = 'vg.fs.modal.open';
 
 class VGModal {
 	constructor(form, arg) {
@@ -55,6 +57,8 @@ class VGModal {
 		setTimeout(() => {
 			_this.element.classList.add('active');
 			_this.backdrop.classList.add('active');
+
+			eventHandler.on(_this.element, EVENT_KEY_MODAL_OPEN, _this)
 		}, _this.params.showDelay);
 
 		document.body.append(_this.element);
@@ -136,29 +140,40 @@ class VGModal {
 		let data = _this.params.data,
 			_class = _this.params.status === 'error' ? 'danger' : _this.params.status;
 
-		if (!data) return false;
+		if (!data && ('response' in data) && !data.response) return false;
 
-		if (isObject(data)) {
-			if (('errors' in data && data.errors) || ('error' in data && data.error)) _class = 'danger';
+		let response = normalizeData(data.response);
+
+		if (isObject(response)) {
+			if (('errors' in data && response.errors) || ('error' in response && response.error)) _class = 'danger';
 		}
 
 		let $alert = el.querySelector('.vg-alert-' + _class);
 		if ($alert) {
 			let $text = $alert.querySelector('[data-alert-'+ _class +'-text]');
 			if ($text) {
-				if (typeof data === 'string') {
-					$text.innerHTML = data;
-				} else if (('msg' in data)) {
-					$text.innerHTML = data.msg;
+				if (typeof response === 'string') {
+					$text.innerHTML = response;
+				} else if (('message' in response)) {
+					let errors = normalizeData(response.errors);
+					if (Array.isArray(errors) || isObject(errors)) {
+						if (isObject(errors)) {
+							for (const error in errors) {
+								console.log(error, errors[error])
+							}
+						}
+					} else {
+						$text.innerHTML = response.message;
+					}
 
 					let $title = $alert.querySelector('[data-alert-'+ _class +'-title]');
-					if ($title && ('title' in data)) $title.innerHTML = data.title;
+					if ($title && ('title' in response)) $title.innerHTML = response.title;
 				}
 			}
 
 			$alert.classList.add('show');
 		} else {
-			el.innerHTML = data.msg
+			el.innerHTML = response
 		}
 	}
 }

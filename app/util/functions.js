@@ -88,10 +88,10 @@ const ajax = {
 			if (x.readyState === 4) {
 				switch (x.status) {
 					case 200:
-						callback('success', x.responseText)
+						callback('success', {text: x.statusText, response: x.responseText})
 						break;
 					default:
-						callback('error', x.statusText)
+						callback('error', {text: x.statusText, response: x.responseText})
 						break;
 				}
 			}
@@ -117,9 +117,10 @@ const ajax = {
  * @type {{on: eventHandler.on}}
  */
 const eventHandler = {
-	on: function (element, event) {
+	on: function (element, event, detail = null) {
 		const eventSuccess = new CustomEvent(event, {
 			bubbles: true,
+			detail: detail
 		});
 
 		element.dispatchEvent(eventSuccess);
@@ -131,4 +132,35 @@ const eventHandler = {
  */
 const isObject = obj => obj && typeof obj === 'object';
 
-export {isObject, mergeDeepObject, collectData, ajax, eventHandler}
+/**
+ *
+ */
+function normalizeData(value) {
+	if (value === 'true') {
+		return true
+	}
+
+	if (value === 'false') {
+		return false
+	}
+
+	if (value === Number(value).toString()) {
+		return Number(value)
+	}
+
+	if (value === '' || value === 'null') {
+		return null
+	}
+
+	if (typeof value !== 'string') {
+		return value
+	}
+
+	try {
+		return JSON.parse(decodeURIComponent(value))
+	} catch {
+		return value
+	}
+}
+
+export {isObject, mergeDeepObject, collectData, ajax, eventHandler, normalizeData}
