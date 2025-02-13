@@ -143,6 +143,7 @@ class VGModal {
 		if (!data && ('response' in data) && !data.response) return false;
 
 		let response = normalizeData(data.response);
+		if(!response) return;
 
 		if (isObject(response)) {
 			if (('errors' in data && response.errors) || ('error' in response && response.error)) _class = 'danger';
@@ -154,12 +155,18 @@ class VGModal {
 			if ($text) {
 				if (typeof response === 'string') {
 					$text.innerHTML = response;
-				} else if (('message' in response)) {
-					let errors = normalizeData(response.errors);
+				} else if (('message' in response) && response.message) {
+					let errors = normalizeData(response.errors) || null;
 					if (Array.isArray(errors) || isObject(errors)) {
 						if (isObject(errors)) {
 							for (const error in errors) {
-								console.log(error, errors[error])
+								if (Array.isArray(errors[error])) {
+									errors[error].forEach(function (txt) {
+										$text.innerHTML += '<div>'+ txt +'</div>';
+									})
+								} else {
+									$text.innerHTML = '<div>'+ errors[error] +'</div>';
+								}
 							}
 						}
 					} else {

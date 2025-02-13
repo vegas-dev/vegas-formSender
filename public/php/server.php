@@ -19,7 +19,7 @@ if ($error) {
 			'child_history' => ['Пожалуйста, загрузите файл с историей ребенка'],
 			'child_photos' => ['Пожалуйста, прикрепите фотографии ребенка.']
 		],
-		'title' => '',
+		'title' => 'Ошибка',
 		'message' => 'The given data was invalid'
 	];
 
