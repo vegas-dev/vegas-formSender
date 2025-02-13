@@ -91,7 +91,7 @@ const ajax = {
 						callback('success', {text: x.statusText, response: x.responseText})
 						break;
 					default:
-						callback('error', {text: x.statusText, response: x.responseText})
+						callback('error', {text: x.statusText, response: x.responseText, code: x.status})
 						break;
 				}
 			}
