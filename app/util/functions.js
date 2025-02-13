@@ -82,8 +82,8 @@ const ajax = {
 			async = true;
 		}
 		let x = ajax.x();
-		x.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 		x.open(method, url, async);
+		x.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 		x.onreadystatechange = function () {
 			if (x.readyState === 4) {
 				switch (x.status) {
