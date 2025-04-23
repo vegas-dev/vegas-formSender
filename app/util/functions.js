@@ -94,9 +94,14 @@ const ajax = {
 						callback('error', {text: x.statusText, response: x.responseText, code: x.status})
 						break;
 				}
+			} else {
+
 			}
 		};
-		x.send(data)
+		x.send(data);
+		x.onerror = function () {
+			console.log(`Произошла ошибка во время отправки: ${x.status}`);
+		}
 	},
 
 	get: function (url, data, callback, async) {

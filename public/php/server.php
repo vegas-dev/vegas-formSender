@@ -12,8 +12,6 @@ $error = true;
 $result = [];
 
 if ($error) {
-	header($_SERVER['SERVER_PROTOCOL'] . '500 Внутренняя ошибка сервера', true, 500);
-
 	/*$result = [
 		'errors' => [
 			'child_history' => ['Пожалуйста, загрузите файл с историей ребенка'],
